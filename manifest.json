@@ -1,8 +1,9 @@
 {
   "name": "農園長者",
   "short_name": "農園長者",
-  "description": "本物の野菜を育てて、食・理科・お金・英語を学ぶアプリ",
+  "description": "本物の野菜を育て、自分の努力でお小遣いと学びを増やす教育アプリ",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#F4F7EE",
   "theme_color": "#1F6B3A",
