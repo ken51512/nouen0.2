@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1F6B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="農園長者">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>農園長者 v0.2</title>
+<style>
+:root{--g:#1f6b3a;--g2:#2f8c50;--pale:#f4f7ee;--card:#fff;--gold:#f2b337;--orange:#ee7c23;--ink:#243126;--muted:#748076;--line:#dfe8d8;--red:#ca4c3b;--blue:#377bb5}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:#dfe9d8;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink)}
+button,input,select,textarea{font:inherit}
+.app{max-width:520px;margin:auto;min-height:100vh;background:var(--pale);position:relative;padding-bottom:88px}
+header{background:linear-gradient(135deg,#15552e,#318b4b);color:white;padding:14px 14px 12px;position:sticky;top:0;z-index:8}
+.head{display:flex;align-items:center;gap:11px}.head img{width:49px;height:49px;border-radius:12px}.title{font-size:22px;font-weight:900}.tag{font-size:11px;opacity:.92;margin-top:2px}
+.profile{margin-left:auto;display:flex;align-items:center;gap:6px;background:#ffffff18;border:1px solid #ffffff30;padding:6px 9px;border-radius:12px;cursor:pointer}
+.profile .face{font-size:24px}.profile b{font-size:13px}.profile small{display:block;font-size:9px;opacity:.85}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.stat{background:#ffffff18;border:1px solid #ffffff24;border-radius:11px;padding:7px;text-align:center;font-size:10px}.stat b{display:block;font-size:15px;color:#ffe083;margin-top:2px}
+main{padding:12px}.page{display:none}.page.active{display:block}
+.card{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 3px 12px #1f6b3a0c}.card h2{font-size:17px;margin:0 0 10px}.card h3{font-size:14px;margin:12px 0 7px}.muted{color:var(--muted);font-size:12px}.small{font-size:11px}.right{text-align:right}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.grid4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{border:0;border-radius:12px;padding:11px 13px;font-weight:800;background:var(--g);color:white;font-size:14px}.btn.alt{background:#edf3e8;color:var(--g)}.btn.gold{background:var(--gold);color:#4b3405}.btn.red{background:var(--red)}.btn.blue{background:var(--blue)}.btn.wide{width:100%}.btn:disabled{opacity:.45}
+.hero{background:linear-gradient(135deg,#fff6d8,#eef8e6);border:1px solid #ead98d;border-radius:16px;padding:14px}
+.hero strong{display:block;font-size:17px;margin-bottom:6px}.hero .primary{font-size:15px;font-weight:800;color:#174e2c}
+.path{display:flex;overflow-x:auto;gap:5px;padding:4px 0 8px}.step{min-width:76px;text-align:center;background:#edf1ea;border-radius:11px;padding:8px 5px;font-size:10px;border:1px solid var(--line)}.step.done{background:#e1f4dc;border-color:#9ecf91}.step.current{background:#fff0b8;border:2px solid var(--gold);font-weight:900}.step .ico{font-size:21px;display:block}
+.checkrow{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-bottom:1px solid var(--line)}.checkrow:last-child{border:0}.checkrow input{width:24px;height:24px;flex:none}.checkrow strong{display:block;font-size:14px}
+.metric{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line)}.metric:last-child{border:0}.metric b{color:var(--g)}
+.planter{border:1px solid var(--line);background:#fbfdf9;border-radius:13px;padding:10px;text-align:center;min-height:112px}.planter .veg{font-size:42px}.planter strong{display:block}.pill{display:inline-block;background:#e6f3df;color:var(--g);padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.tabs{display:flex;gap:6px;overflow:auto;margin-bottom:10px}.tab{white-space:nowrap;border:0;border-radius:999px;padding:8px 11px;background:#e8eee4;color:#49614d;font-weight:700}.tab.on{background:var(--g);color:white}
+label{font-size:12px;color:var(--muted);font-weight:700;display:block;margin:8px 0 4px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;font-size:15px;background:white}textarea{min-height:90px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--line);z-index:15;padding:5px 4px calc(5px + env(safe-area-inset-bottom))}
+.bottom button{border:0;background:none;color:#6f796e;font-size:10px;padding:6px 2px}.bottom button span{display:block;font-size:22px}.bottom button.on{color:var(--g);font-weight:800}
+.avatar{font-size:65px;text-align:center}.outfit{font-size:32px;border:2px solid transparent;border-radius:13px;padding:8px;text-align:center;background:#f6f8f3}.outfit.on{border-color:var(--gold);background:#fff7d8}
+.notice{padding:9px 11px;border-left:4px solid var(--gold);background:#fff8df;border-radius:9px;font-size:13px}
+.alert{padding:9px 11px;border-left:4px solid var(--red);background:#fff0ed;border-radius:9px;font-size:13px}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;z-index:30}.modal.show{display:flex}.sheet{background:var(--pale);width:min(520px,100%);margin:auto;border-radius:22px 22px 0 0;padding:16px;max-height:87vh;overflow:auto}
+.sheethead{display:flex;align-items:center;gap:8px;margin-bottom:8px}.back{border:0;background:#e8eee4;border-radius:999px;padding:8px 11px;font-weight:800;color:var(--g)}
+.bigveg{text-align:center;font-size:90px}.progress{height:10px;border-radius:99px;background:#e6ece2;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#4eb969,#8ed24a)}
+.badge{display:inline-block;padding:5px 8px;background:#f4ead0;border-radius:999px;font-size:11px;margin:2px}
+.stage{font-size:11px;color:var(--muted);text-align:center;margin-top:5px}
+.onboard{position:fixed;inset:0;background:linear-gradient(160deg,#15552e,#3d9554);z-index:50;color:white;display:none;overflow:auto}.onboard.show{display:block}.oninner{max-width:520px;margin:auto;padding:24px 18px 40px}.onboard h1{font-size:28px;margin:10px 0}.onboard .panel{background:white;color:var(--ink);border-radius:20px;padding:17px;margin:15px 0}.dots{text-align:center;font-size:18px;letter-spacing:5px}.choice{border:2px solid var(--line);background:white;border-radius:14px;padding:12px;text-align:center}.choice.on{border-color:var(--gold);background:#fff7dc}.choice .big{font-size:48px}
+.equipmentIcon{font-size:32px;width:42px;text-align:center;flex:none}
+.tutorialGlow{animation:glow 1.15s infinite alternate;outline:4px solid #ffd65a}
+@keyframes glow{from{box-shadow:0 0 0 0 #ffd65a88}to{box-shadow:0 0 0 10px #ffd65a00}}
+.timeline{border-left:3px solid #b8d7ad;padding-left:13px;margin-left:7px}.day{position:relative;padding:0 0 14px}.day:before{content:"";position:absolute;left:-20px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--g)}
+@media (min-width:420px){.grid4{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="head">
+  <img src="icon-192.png">
+  <div><div class="title">農園長者</div><div class="tag">本物の野菜を育てて学ぶ</div></div>
+  <button class="profile" onclick="editName()"><span class="face" id="faceTop">🧑‍🌾</span><span><b id="nameTop">なまえ</b><small>タップして変更 ✎</small></span></button>
+ </div>
+ <div class="stats">
+  <div class="stat">Farm Lv<b id="lvTop">1</b></div>
+  <div class="stat">今月利益<b id="profitTop">0円</b></div>
+  <div class="stat">ポイント<b id="pointTop">0P</b></div>
+ </div>
+</header>
+
+<main>
+<section id="home" class="page active">
+ <div class="card hero">
+  <strong>このゲームの目的</strong>
+  <div>🌱 本物の野菜を育てる → 💰 親に売ってお金を学ぶ → 📚 自由研究を完成させる</div>
+ </div>
+ <div class="card">
+  <h2>農園長者への道</h2>
+  <div id="path" class="path"></div>
+ </div>
+ <div class="card hero">
+  <strong>今やること</strong>
+  <div class="primary" id="todayTask">まずは設備を確認しよう</div>
+  <div class="muted" id="taskWhy" style="margin:7px 0 10px"></div>
+  <button id="taskButton" class="btn gold wide" onclick="runNextTask()">始める</button>
+ </div>
+ <div class="card">
+  <h2>積み上げ記録</h2>
+  <div class="grid2">
+   <div class="metric"><span>累計売上</span><b id="salesAll">0円</b></div>
+   <div class="metric"><span>今月売上</span><b id="salesMonth">0円</b></div>
+   <div class="metric"><span>累計利益</span><b id="profitAll">0円</b></div>
+   <div class="metric"><span>今月利益</span><b id="profitMonth">0円</b></div>
+  </div>
+ </div>
+ <div class="card"><h2>わたしの農園 <span class="pill" id="planterCount">4台</span></h2><div id="homePlanters" class="grid4"></div></div>
+ <div class="card"><h2>次の目標</h2><div id="nextUnlock" class="notice"></div><div class="progress" style="margin-top:10px"><i id="xpBar"></i></div></div>
+</section>
+
+<section id="farm" class="page">
+ <div class="card">
+  <h2>農園</h2>
+  <div class="tabs"><button class="tab on">すべて</button><button class="tab">要対応</button><button class="tab">収穫間近</button></div>
+  <div id="farmPlanters" class="grid4"></div>
+ </div>
+ <div class="card"><button class="btn alt wide" onclick="recordAllWater()">💧 まとめて水やりを記録</button><p class="muted">これは実際に水やりをした記録です。タップだけで野菜が成長することはありません。</p></div>
+</section>
+
+<section id="learn" class="page">
+ <div class="card"><h2>野菜図鑑</h2><div id="cropBook" class="grid2"></div></div>
+ <div class="card"><h2>栽培のひみつ</h2><div class="grid2">
+  <button class="btn alt" onclick="secret('光合成','植物は光を使って、水と二酸化炭素から栄養をつくります。')">☀️ 光</button>
+  <button class="btn alt" onclick="secret('水','根から吸った水は、植物の体を通って葉まで運ばれます。')">💧 水</button>
+  <button class="btn alt" onclick="secret('土','土は根を支え、水や空気、栄養を届けます。')">🟫 土</button>
+  <button class="btn alt" onclick="secret('利益','売上から種・土・水・電気などの原価を引いた残りです。')">💰 お金</button>
+ </div></div>
+</section>
+
+<section id="avatar" class="page">
+ <div class="card"><h2>着せ替え</h2><div class="avatar" id="avatarView">🧑‍🌾</div><div class="grid4" id="outfits"></div><button class="btn wide" style="margin-top:10px" onclick="saveCoord()">コーデを保存</button><div class="muted right" id="coordMsg"></div></div>
+ <div class="card"><h2>獲得ルール</h2><span class="badge">毎レベル</span><span class="badge">5レベル特別セット</span><span class="badge">野菜マスター</span><span class="badge">おもしろ衣装</span><span class="badge">季節衣装</span><span class="badge">Lv30 農園長者</span><p class="muted">ガチャなし。能力差なし。努力で必ず集められます。</p></div>
+</section>
+
+<section id="more" class="page">
+ <div class="card"><h2>設備チェック・管理</h2><div id="equipmentList"></div><button class="btn wide" onclick="saveEquipment()">設備状況を保存</button></div>
+ <div class="card"><h2>自由研究</h2><div class="metric"><span>完成度</span><b id="researchPct">0%</b></div><label>テンプレート</label><select id="template"><option value="2">A4 2ページ 簡易版</option><option value="4" selected>A4 4ページ 標準版</option><option value="6">A4 6ページ 詳細版</option></select><label>名前</label><input id="studentName"><label>学年・組</label><input id="studentClass" placeholder="5年1組"><label>タイトル</label><input id="researchTitle" value="ベビーリーフの成長と収穫の研究"><label>感想・考察</label><textarea id="researchComment"></textarea><button class="btn wide" onclick="previewResearch()">A4プレビュー</button></div>
+ <div class="card"><h2>親モード</h2><label>親PIN</label><input id="pin" type="password" inputmode="numeric" placeholder="初期PIN 1234"><button class="btn wide" onclick="openParent()">親モードを開く</button></div>
+ <div class="card"><h2>データ</h2><div class="grid2"><button class="btn alt" onclick="exportData()">バックアップ</button><button class="btn red" onclick="resetData()">初期化</button></div></div>
+</section>
+</main>
+
+<nav class="bottom">
+<button class="on" data-p="home" onclick="openPage('home',this)"><span>🏠</span>ホーム</button>
+<button data-p="farm" onclick="openPage('farm',this)"><span>🌱</span>農園</button>
+<button data-p="learn" onclick="openPage('learn',this)"><span>📘</span>図鑑</button>
+<button data-p="avatar" onclick="openPage('avatar',this)"><span>👕</span>着替え</button>
+<button data-p="more" onclick="openPage('more',this)"><span>⚙️</span>その他</button>
+</nav>
+</div>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div id="sheet" class="sheet"></div></div>
+
+<div id="onboard" class="onboard"><div class="oninner" id="oninner"></div></div>
+
+<script>
+const KEY='nouen-choja-mvp-v02';
+const OLDKEY='nouen-choja-mvp-v01';
+const CROPS=[
+{id:'baby',lv:1,name:'ベビーリーフ',en:'Baby Leaf',icon:'🥬',days:'20〜30日',gap:'1〜2cm',temp:'15〜25℃',tip:'ばらまきか筋まき。発芽までは乾かさず、葉が10cmほどで収穫。',nutrition:'ビタミン類を手軽にとれます。'},
+{id:'salad',lv:3,name:'サラダ菜',en:'Leaf Lettuce',icon:'🥗',days:'30〜45日',gap:'15〜20cm',temp:'15〜20℃',tip:'苗同士の間隔を広く取り、葉が重なりすぎないようにします。',nutrition:'βカロテンや葉酸などを含みます。'},
+{id:'komatsu',lv:6,name:'小松菜',en:'Komatsuna',icon:'🌿',days:'30〜50日',gap:'5〜8cm',temp:'15〜25℃',tip:'芽が混み合ったら間引き、草丈20cm前後で収穫。',nutrition:'カルシウム、鉄、ビタミン類を含みます。'},
+{id:'radish',lv:9,name:'ラディッシュ',en:'Radish',icon:'🔴',days:'25〜40日',gap:'3〜5cm',temp:'15〜22℃',tip:'間引き不足だと根が太りません。根が2〜3cmで収穫。',nutrition:'ビタミンCなどを含みます。'},
+{id:'spinach',lv:13,name:'ほうれん草',en:'Spinach',icon:'🍃',days:'35〜55日',gap:'5〜8cm',temp:'10〜20℃',tip:'暑さを避け、葉が混み合わないように間引きます。',nutrition:'鉄、葉酸、βカロテンなどを含みます。'},
+{id:'lettuce',lv:16,name:'レタス',en:'Lettuce',icon:'🥬',days:'45〜70日',gap:'20〜25cm',temp:'15〜20℃',tip:'株間を確保し、中心が締まってきたら収穫。',nutrition:'水分が多く、ビタミンや食物繊維を含みます。'},
+{id:'basil',lv:20,name:'バジル',en:'Basil',icon:'🌱',days:'30〜50日',gap:'15〜20cm',temp:'20〜30℃',tip:'草丈15cmほどで先端を摘むと枝葉が増えます。',nutrition:'香り成分とβカロテンなどを含みます。'}];
+const OUTFITS=['🧢','👒','🥕','🍅','🥬','🌽','🎩','👑'];
+const EQ=[
+{id:'planter',icon:'🪴',name:'プランター',required:true},
+{id:'soil',icon:'🟫',name:'土',required:true},
+{id:'seed',icon:'🌱',name:'ベビーリーフの種',required:true},
+{id:'led',icon:'💡',name:'LEDライト',required:true},
+{id:'timer',icon:'⏱️',name:'タイマー',required:true},
+{id:'water',icon:'💧',name:'水やり用品',required:true},
+{id:'fertilizer',icon:'🧴',name:'肥料',required:true},
+{id:'reflectTop',icon:'⬆️',name:'上部反射板',required:false},
+{id:'reflectSide',icon:'↔️',name:'側面反射板',required:false},
+{id:'reflectBack',icon:'🔙',name:'背面反射板',required:false}
+];
+const PATH=[
+{id:'profile',label:'名前',icon:'✍️'},
+{id:'avatar',label:'キャラ',icon:'🧑‍🌾'},
+{id:'equipment',label:'設備',icon:'🧰'},
+{id:'crop',label:'野菜',icon:'🥬'},
+{id:'sow',label:'種まき',icon:'🌱'},
+{id:'observe',label:'観察',icon:'📷'},
+{id:'harvest',label:'収穫',icon:'✂️'},
+{id:'sell',label:'販売',icon:'💰'},
+{id:'research',label:'研究',icon:'📚'}
+];
+function fresh(){return {
+ version:'0.2',onboardDone:false,onboardStep:0,name:'',gender:'boy',avatar:'🧑‍🌾',hair:'short',skin:'medium',outfit:'🧢',
+ lv:1,xp:0,points:0,sales:0,cost:0,loan:0,repayRate:30,
+ equipment:Object.fromEntries(EQ.map(e=>[e.id,false])),
+ planters:Array.from({length:4},(_,i)=>({id:i+1,crop:null,sowDate:null,lastObservedDate:null,observations:[],waterEvents:[],photos:[],harvested:false})),
+ prices:{baby:200,salad:200,komatsu:150,radish:150,spinach:180,lettuce:200,basil:120},
+ coords:[],tastes:[],salesLog:[],research:{name:'',clazz:'',title:'ベビーリーフの成長と収穫の研究',comment:''}
+}}
+let S=JSON.parse(localStorage.getItem(KEY)||'null');
+if(!S){S=fresh();}
+function save(){localStorage.setItem(KEY,JSON.stringify(S));render()}
+function yen(n){return Math.round(n).toLocaleString()+'円'}
+function currentMonth(arr){let m=new Date().toISOString().slice(0,7);return arr.filter(x=>x.date.startsWith(m))}
+function crop(id){return CROPS.find(x=>x.id===id)}
+function dateOnly(d=new Date()){return d.toISOString().slice(0,10)}
+function daysSince(date){if(!date)return 0;const a=new Date(date+'T00:00:00'),b=new Date(dateOnly()+'T00:00:00');return Math.max(0,Math.floor((b-a)/86400000))}
+function stageFor(p){if(!p.crop)return {pct:0,label:'空き'};const c=crop(p.crop),days=daysSince(p.sowDate),total=parseInt(c.days);const pct=Math.min(100,Math.round(days/total*100));let label='種まき';if(days>=2)label='発芽待ち';if(pct>=15)label='発芽';if(pct>=30)label='双葉';if(pct>=50)label='本葉';if(pct>=75)label='大きく成長';if(pct>=100)label='収穫サイズ';return {pct,label,days}}
+function equipmentReady(){return EQ.filter(e=>e.required).every(e=>S.equipment[e.id])}
+function hasCrop(){return S.planters.some(p=>p.crop)}
+function hasObservation(){return S.planters.some(p=>p.observations.length)}
+function hasHarvest(){return S.planters.some(p=>p.harvested)||S.salesLog.length>0}
+function pathStatus(id){
+ if(id==='profile')return !!S.name;
+ if(id==='avatar')return !!S.avatar;
+ if(id==='equipment')return equipmentReady();
+ if(id==='crop')return hasCrop();
+ if(id==='sow')return S.planters.some(p=>p.sowDate);
+ if(id==='observe')return hasObservation();
+ if(id==='harvest')return hasHarvest();
+ if(id==='sell')return S.salesLog.length>0;
+ if(id==='research')return !!(S.research.comment&&S.salesLog.length);
+ return false;
+}
+function nextStep(){return PATH.find(x=>!pathStatus(x.id))||null}
+function openPage(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.bottom button').forEach(x=>x.classList.remove('on'));let b=btn||document.querySelector(`.bottom button[data-p="${id}"]`);if(b)b.classList.add('on');window.scrollTo(0,0);render()}
+function render(){
+ const pAll=S.sales-S.cost,pMonth=currentMonth(S.salesLog).reduce((a,x)=>a+x.profit,0),sMonth=currentMonth(S.salesLog).reduce((a,x)=>a+x.sales,0);
+ lvTop.textContent=S.lv;profitTop.textContent=yen(pMonth);pointTop.textContent=S.points+'P';nameTop.textContent=S.name||'なまえ';faceTop.textContent=S.avatar||'🧑‍🌾';avatarView.textContent=(S.avatar||'🧑‍🌾')+(S.outfit||'');
+ salesAll.textContent=yen(S.sales);salesMonth.textContent=yen(sMonth);profitAll.textContent=yen(pAll);profitMonth.textContent=yen(pMonth);planterCount.textContent=S.planters.length+'台';
+ const current=nextStep();path.innerHTML=PATH.map(x=>`<div class="step ${pathStatus(x.id)?'done':current&&current.id===x.id?'current':''}"><span class="ico">${pathStatus(x.id)?'✅':x.icon}</span>${x.label}</div>`).join('');
+ const task=taskData(current);todayTask.textContent=task.title;taskWhy.textContent=task.why;taskButton.textContent=task.button;
+ const next=CROPS.find(x=>x.lv>S.lv);nextUnlock.textContent=next?`次の作物「${next.name}」は Lv.${next.lv} で解放`:'すべての作物を解放しました！';xpBar.style.width=Math.min(100,S.xp%100)+'%';
+ const html=S.planters.map(x=>{let c=x.crop?crop(x.crop):null,st=stageFor(x);return `<button class="planter" onclick="openPlanter(${x.id})"><div class="veg">${c?c.icon:'＋'}</div><strong>プランター${x.id}</strong><span class="pill">${c?st.pct+'%':'空き'}</span>${c?`<div class="stage">${st.label}・${st.days}日目</div>`:''}</button>`}).join('');
+ homePlanters.innerHTML=html;farmPlanters.innerHTML=html;
+ cropBook.innerHTML=CROPS.map(c=>`<button class="planter" onclick="openCrop('${c.id}')" style="opacity:${S.lv>=c.lv?1:.45}"><div class="veg">${c.icon}</div><strong>${c.name}</strong><small>${S.lv>=c.lv?c.en:'Lv.'+c.lv+'で解放'}</small></button>`).join('');
+ outfits.innerHTML=OUTFITS.map((o,i)=>`<button class="outfit ${S.outfit===o?'on':''}" onclick="wear('${o}')" style="opacity:${i<S.lv?1:.35}">${o}<div class="small">${i<S.lv?'解放済':'Lv.'+(i+1)}</div></button>`).join('');
+ equipmentList.innerHTML=EQ.map(e=>`<label class="checkrow"><input type="checkbox" id="eq_${e.id}" ${S.equipment[e.id]?'checked':''}><span class="equipmentIcon">${e.icon}</span><span><strong>${e.name}${e.required?'（必要）':'（任意）'}</strong><span class="muted">${S.equipment[e.id]?'用意できています':'まだ確認されていません'}</span></span></label>`).join('');
+ studentName.value=S.research.name||S.name;studentClass.value=S.research.clazz||'';researchTitle.value=S.research.title||'';researchComment.value=S.research.comment||'';
+ researchPct.textContent=Math.min(100,(hasObservation()?35:0)+(hasHarvest()?35:0)+(S.research.comment?30:0))+'%';
+}
+function taskData(step){
+ if(!step)return {title:'農園長者への道を達成しました！',why:'次の野菜や自由研究に挑戦しよう。',button:'農園を見る'};
+ const m={
+ profile:['名前を入力しよう','名前はホーム上部をタップして、いつでも変更できます。','名前を入力'],
+ avatar:['自分のキャラクターを作ろう','自分の分身を作ると、育てる楽しさが増えます。','キャラを作る'],
+ equipment:['本物の設備を確認しよう','実際のプランター・土・種・LEDなどが揃っているか確認します。','設備を確認'],
+ crop:['最初に育てる野菜を選ぼう','初めてなら、育てやすいベビーリーフがおすすめです。','野菜を選ぶ'],
+ sow:['本物の種をまこう','種まきの方法を見ながら、プランター1から始めます。','種まきを始める'],
+ observe:['今日の観察を記録しよう','写真やコメントを残すと、自由研究に自動でまとまります。','観察する'],
+ harvest:['実際の成長を待とう','日数と観察記録に連動します。ボタンを押すだけでは成長しません。','農園を見る'],
+ sell:['収穫した野菜を親に売ろう','親が設定した価格で売上と利益を学びます。','売却記録を見る'],
+ research:['自由研究を完成させよう','名前・写真・感想・考察を入れてA4で印刷できます。','自由研究を開く']
+ };let a=m[step.id];return {title:a[0],why:a[1],button:a[2]}
+}
+function runNextTask(){
+ const s=nextStep();if(!s){openPage('farm');return}
+ if(s.id==='profile'){editName();return}
+ if(s.id==='avatar'){startAvatarMaker();return}
+ if(s.id==='equipment'){openPage('more');setTimeout(()=>document.querySelector('#equipmentList').scrollIntoView({behavior:'smooth'}),100);return}
+ if(s.id==='crop'||s.id==='sow'){openPage('farm');openPlanter(1);return}
+ if(s.id==='observe'){let p=S.planters.find(p=>p.crop);if(p)openPlanter(p.id);return}
+ if(s.id==='harvest'){openPage('farm');return}
+ if(s.id==='sell'){openPage('more');return}
+ if(s.id==='research'){openPage('more');return}
+}
+function show(content){sheet.innerHTML=content;modal.classList.add('show')}
+function closeModal(){modal.classList.remove('show');render()}
+function editName(){show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">名前を変更</h2></div><label>名前</label><input id="nameInput" maxlength="12" value="${S.name||''}" placeholder="名前を入力"><button class="btn wide" style="margin-top:10px" onclick="saveName()">保存</button>`)}
+function saveName(){let v=document.getElementById('nameInput').value.trim();if(!v){alert('名前を入力してください');return}S.name=v;S.research.name=v;save();closeModal()}
+function startAvatarMaker(){show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">キャラメイキング</h2></div><div class="avatar">${S.avatar||'🧑‍🌾'}</div><div class="grid2"><button class="choice ${S.gender==='boy'?'on':''}" onclick="S.gender='boy';S.avatar='👦';save();startAvatarMaker()"><div class="big">👦</div>男の子</button><button class="choice ${S.gender==='girl'?'on':''}" onclick="S.gender='girl';S.avatar='👧';save();startAvatarMaker()"><div class="big">👧</div>女の子</button></div><h3>最初の帽子</h3><div class="grid3"><button class="outfit" onclick="S.outfit='';save();closeModal()">なし</button><button class="outfit" onclick="S.outfit='🧢';save();closeModal()">🧢</button><button class="outfit" onclick="S.outfit='👒';save();closeModal()">👒</button></div>`)}
+function saveEquipment(){EQ.forEach(e=>S.equipment[e.id]=document.getElementById('eq_'+e.id).checked);save();alert(equipmentReady()?'必要な設備がそろいました！':'まだ用意できていない必要設備があります。親と確認してください。')}
+function openPlanter(id){
+ let p=S.planters.find(x=>x.id===id);
+ if(!p.crop){
+  if(!equipmentReady()){show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">設備の確認が先です</h2></div><div class="alert">本物の野菜を育てるため、必要な設備が揃っているか先にチェックしてください。</div><button class="btn wide" style="margin-top:10px" onclick="closeModal();openPage('more')">設備チェックへ</button>`);return}
+  show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">プランター${id}</h2></div><p>育てる作物を選んでください。</p>${CROPS.filter(c=>S.lv>=c.lv).map(c=>`<button class="btn alt wide" style="margin:4px 0" onclick="chooseCrop(${id},'${c.id}')">${c.icon} ${c.name}${c.id==='baby'?'（おすすめ）':''}</button>`).join('')}`);return
+ }
+ let c=crop(p.crop),st=stageFor(p);
+ show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">プランター${id}：${c.name}</h2></div><div class="bigveg">${c.icon}</div><div class="progress"><i style="width:${st.pct}%"></i></div><div class="metric"><span>生育状況</span><b>${st.pct}%</b></div><div class="metric"><span>実際の経過</span><b>${st.days}日目・${st.label}</b></div><div class="metric"><span>親設定単価</span><b>${S.prices[c.id]||0}円/100g</b></div><div class="notice">種の間隔：${c.gap}<br>${c.tip}</div><div class="grid2" style="margin-top:10px"><button class="btn" onclick="water(${id})">💧 水やりを記録</button><button class="btn alt" onclick="observation(${id})">📷 成長記録</button></div>${st.pct>=100?`<button class="btn gold wide" style="margin-top:10px" onclick="harvest(${id})">収穫する</button>`:''}<h3>成長記録</h3>${timelineHtml(p)}`)
+}
+function chooseCrop(id,cid){let p=S.planters.find(x=>x.id===id);p.crop=cid;p.sowDate=null;save();showSowing(id)}
+function showSowing(id){let p=S.planters.find(x=>x.id===id),c=crop(p.crop);show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">${c.name}の種まき</h2></div><ol><li>土を平らにする</li><li>種を${c.gap}の目安でまく</li><li>薄く土をかける</li><li>優しく水をあげる</li></ol><div class="notice">実際に種をまいてからボタンを押してください。</div><button class="btn wide" style="margin-top:10px" onclick="confirmSow(${id})">実際に種をまいた</button>`)}
+function confirmSow(id){let p=S.planters.find(x=>x.id===id);p.sowDate=dateOnly();p.lastObservedDate=null;p.observations=[];S.xp+=20;S.points+=10;levelCheck();save();closeModal();alert('種まき日を記録しました。生育状況は0%から始まります。')}
+function timelineHtml(p){if(!p.observations.length)return '<p class="muted">まだ記録がありません。実際に観察して、写真やコメントを残そう。</p>';return `<div class="timeline">${p.observations.slice().reverse().map(o=>`<div class="day"><strong>${o.day}日目（${o.date}）</strong><div>${o.comment}</div>${o.photo?'<div>📷 写真あり</div>':''}</div>`).join('')}</div>`}
+function observation(id){
+ let p=S.planters.find(x=>x.id===id),day=daysSince(p.sowDate)+1,already=p.observations.find(o=>o.date===dateOnly());
+ show(`<div class="sheethead"><button class="back" onclick="openPlanter(${id})">← 戻る</button><h2 style="margin:0">成長記録・${day}日目</h2></div>${already?'<div class="notice">今日はすでに記録があります。内容を追加・更新できます。</div>':''}<label>観察したこと</label><textarea id="obsText" placeholder="葉の色、芽の数、土の乾き方など">${already?already.comment:''}</textarea><label>写真（任意）</label><input id="obsPhoto" type="file" accept="image/*"><button class="btn wide" onclick="saveObservation(${id})">今日の記録を保存</button><p class="muted">成長率は実際の日数に連動します。このボタンで勝手に成長しません。</p>`)
+}
+function saveObservation(id){let p=S.planters.find(x=>x.id===id),text=document.getElementById('obsText').value.trim();if(!text){alert('観察したことを入力してください');return}let date=dateOnly(),photo=document.getElementById('obsPhoto').files.length>0,existing=p.observations.find(o=>o.date===date);if(existing){existing.comment=text;existing.photo=existing.photo||photo}else{p.observations.push({date,day:daysSince(p.sowDate)+1,comment:text,photo});S.points+=photo?15:10}p.lastObservedDate=date;S.research.comment=(S.research.comment?S.research.comment+'\n':'')+`${daysSince(p.sowDate)+1}日目：${text}`;save();openPlanter(id)}
+function water(id){let p=S.planters.find(x=>x.id===id),date=dateOnly();if(p.waterEvents.includes(date)){alert('今日の水やりはすでに記録済みです');return}p.waterEvents.push(date);S.xp+=3;S.points+=2;levelCheck();save();openPlanter(id)}
+function recordAllWater(){let date=dateOnly(),count=0;S.planters.filter(x=>x.crop).forEach(x=>{if(!x.waterEvents.includes(date)){x.waterEvents.push(date);count++}});if(count){S.xp+=3;S.points+=2;levelCheck();save();alert(`${count}台の水やりを記録しました`)}else alert('今日はすでに記録済みです')}
+function levelCheck(){while(S.xp>=100&&S.lv<30){S.xp-=100;S.lv++;S.points+=30;alert(`レベルアップ！ Farm Lv.${S.lv}`)}}
+function harvest(id){let p=S.planters.find(x=>x.id===id),c=crop(p.crop);S.xp+=80;S.points+=20;p.harvested=true;levelCheck();show(`<div class="sheethead"><button class="back" onclick="openPlanter(${id})">← 戻る</button><h2 style="margin:0">収穫できました！</h2></div><div class="bigveg">${c.icon}</div><label>実際の収穫量（g）</label><input id="harvestQty" type="number" value="150" min="1"><div class="grid2" style="margin-top:10px"><button class="btn gold" onclick="sellHarvest(${id})">売る</button><button class="btn" onclick="tasteHarvest(${id})">食べてみた</button></div><button class="btn alt wide" style="margin-top:8px" onclick="finishHarvest(${id})">あとで</button>`);save()}
+function sellHarvest(id){let p=S.planters.find(x=>x.id===id),c=crop(p.crop),qty=+(document.getElementById('harvestQty')?.value||150),sales=(S.prices[c.id]||0)*qty/100,cost=30,profit=sales-cost;show(`<div class="sheethead"><button class="back" onclick="harvest(${id})">← 戻る</button><h2 style="margin:0">親へ売却申請</h2></div><div class="metric"><span>売上予測</span><b>${yen(sales)}</b></div><div class="metric"><span>原価（仮）</span><b>${yen(cost)}</b></div><div class="metric"><span>利益予測</span><b>${yen(profit)}</b></div><label>利益から親ローンを返す割合</label><input id="rate" type="range" min="0" max="100" value="${S.repayRate}" oninput="rateVal.textContent=this.value+'%'"><div id="rateVal">${S.repayRate}%</div><button class="btn wide" onclick="approveSale(${id},${sales},${cost},${profit})">親が承認する（試作）</button>`)}
+function approveSale(id,sales,cost,profit){let rate=+document.getElementById('rate').value;S.repayRate=rate;let repayment=Math.min(S.loan,profit*rate/100);S.loan-=repayment;S.sales+=sales;S.cost+=cost;S.salesLog.push({date:dateOnly(),sales,cost,profit,repayment});S.points+=25;save();show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 閉じる</button><h2 style="margin:0">精算完了</h2></div><div class="metric"><span>売上</span><b>${yen(sales)}</b></div><div class="metric"><span>利益</span><b>${yen(profit)}</b></div><div class="metric"><span>ローン返済</span><b>${yen(repayment)}</b></div><button class="btn wide" onclick="closeModal()">OK</button>`)}
+function tasteHarvest(id){show(`<div class="sheethead"><button class="back" onclick="harvest(${id})">← 戻る</button><h2 style="margin:0">食べてみた</h2></div><label>感想（必須）</label><textarea id="tasteText" placeholder="シャキシャキしておいしかった！"></textarea><label>写真（任意・追加ポイント）</label><input id="tastePhoto" type="file" accept="image/*"><button class="btn wide" onclick="saveTaste(${id})">記録する</button>`)}
+function saveTaste(id){let text=document.getElementById('tasteText').value.trim();if(!text){alert('感想を入力してください');return}let photo=document.getElementById('tastePhoto').files.length>0;S.tastes.push({date:dateOnly(),comment:text,photo});S.points+=photo?20:10;S.research.comment=(S.research.comment?S.research.comment+'\n':'')+'食べた感想：'+text;save();show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 閉じる</button><h2 style="margin:0">記録しました！</h2></div><p>基本ポイント +10P${photo?'<br>写真ボーナス +10P':''}</p><button class="btn wide" onclick="closeModal()">OK</button>`)}
+function finishHarvest(id){let p=S.planters.find(x=>x.id===id);p.crop=null;p.sowDate=null;p.observations=[];p.waterEvents=[];save();closeModal()}
+function openCrop(id){let c=crop(id);if(S.lv<c.lv){alert(`Lv.${c.lv}で解放されます`);return}show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">${c.icon} ${c.name}</h2></div><div class="bigveg">${c.icon}</div><p><b>${c.en}</b> 🔊</p><div class="metric"><span>収穫目安</span><b>${c.days}</b></div><div class="metric"><span>種・株の間隔</span><b>${c.gap}</b></div><div class="metric"><span>適温</span><b>${c.temp}</b></div><div class="notice">${c.tip}</div><h3>栄養</h3><p>${c.nutrition}</p>`)}
+function secret(t,x){show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">${t}</h2></div><p>${x}</p><button class="btn wide" onclick="closeModal()">わかった！</button>`)}
+function wear(o){let i=OUTFITS.indexOf(o);if(i>=S.lv){alert('まだ解放されていません');return}S.outfit=o;save()}
+function saveCoord(){S.coords.push(S.outfit);coordMsg.textContent='保存しました';save()}
+function openParent(){if(pin.value!=='1234'){alert('PINが違います');return}show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 戻る</button><h2 style="margin:0">親モード</h2></div><div class="notice">初期PINは試作用です。正式版では変更・生体認証に対応します。</div><h3>買取価格（円/100g）</h3>${CROPS.map(c=>`<label>${c.name}</label><input type="number" value="${S.prices[c.id]||0}" onchange="S.prices['${c.id}']=+this.value;save()">`).join('')}<h3>親ローン（無利息）</h3><div class="metric"><span>残高</span><b>${yen(S.loan)}</b></div><input id="loanAdd" type="number" placeholder="融資額"><button class="btn wide" onclick="S.loan+=+loanAdd.value||0;save();closeModal()">融資を承認</button>`)}
+function previewResearch(){S.research={name:studentName.value,clazz:studentClass.value,title:researchTitle.value,comment:researchComment.value};save();let pages=+template.value;show(`<div class="sheethead"><button class="back" onclick="closeModal()">← 編集に戻る</button><h2 style="margin:0">A4プレビュー（${pages}ページ）</h2></div><div class="notice">印刷時だけ、下部タブなどのアプリ操作部分を除いたA4レイアウトを開きます。</div><div class="card"><h3>${S.research.title}</h3><p>名前：${S.research.name}　${S.research.clazz}</p><p>${S.research.comment||'感想・考察を入力してください。'}</p></div><button class="btn wide" onclick="printResearch(${pages})">印刷する</button>`)}
+function printResearch(pages){let w=window.open('','_blank');w.document.write(`<html><head><meta name="viewport" content="width=device-width"><title>${S.research.title}</title><style>@page{size:A4;margin:15mm}body{font-family:sans-serif}h1{color:#1f6b3a}.page{page-break-after:always}.box{border:1px solid #bbb;padding:12px;margin:12px 0}</style></head><body>${Array.from({length:pages},(_,i)=>`<div class="page"><h1>${i===0?S.research.title:'記録 '+(i+1)}</h1>${i===0?`<p>名前：${S.research.name}　${S.research.clazz}</p>`:''}<div class="box">${i===0?'研究の目的：本物の野菜を育て、成長・収穫・お金について調べる。':i===pages-1?'感想・考察：'+(S.research.comment||'ここに入力します。'):'成長記録・写真・収穫・収支データを自動配置します。'}</div></div>`).join('')}</body></html>`);w.document.close();w.print()}
+function exportData(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='農園長者バックアップ.json';a.click()}
+function resetData(){if(confirm('全データを初期化しますか？')){localStorage.removeItem(KEY);location.reload()}}
+function onboarding(){
+ if(S.onboardDone)return;
+ onboard.classList.add('show');renderOnboarding();
+}
+function renderOnboarding(){
+ const n=S.onboardStep||0;
+ const screens=[
+  `<div class="dots">● ○ ○ ○ ○</div><h1>ようこそ農園長者へ！</h1><div class="panel"><div style="font-size:70px;text-align:center">🌱💰📚</div><p><b>本物の野菜</b>を育てて、育ち方・食べ物・お金・英語を学び、最後に自由研究を完成させるアプリです。</p></div><button class="btn gold wide" onclick="S.onboardStep=1;save();renderOnboarding()">はじめる</button>`,
+  `<div class="dots">○ ● ○ ○ ○</div><h1>名前を教えてね</h1><div class="panel"><label>名前</label><input id="onName" maxlength="12" value="${S.name||''}" placeholder="名前を入力"><p class="muted">あとからホーム上部の名前をタップして変更できます。</p></div><button class="btn gold wide" onclick="onNameNext()">次へ</button>`,
+  `<div class="dots">○ ○ ● ○ ○</div><h1>キャラクターを作ろう</h1><div class="panel"><div class="grid2"><button class="choice ${S.gender==='boy'?'on':''}" onclick="S.gender='boy';S.avatar='👦';save();renderOnboarding()"><div class="big">👦</div>男の子</button><button class="choice ${S.gender==='girl'?'on':''}" onclick="S.gender='girl';S.avatar='👧';save();renderOnboarding()"><div class="big">👧</div>女の子</button></div><h3>帽子</h3><div class="grid3"><button class="outfit" onclick="S.outfit='';save();renderOnboarding()">なし</button><button class="outfit ${S.outfit==='🧢'?'on':''}" onclick="S.outfit='🧢';save();renderOnboarding()">🧢</button><button class="outfit ${S.outfit==='👒'?'on':''}" onclick="S.outfit='👒';save();renderOnboarding()">👒</button></div></div><button class="btn gold wide" onclick="S.onboardStep=3;save();renderOnboarding()">次へ</button>`,
+  `<div class="dots">○ ○ ○ ● ○</div><h1>本物の設備を確認しよう</h1><div class="panel">${EQ.filter(e=>e.required).map(e=>`<label class="checkrow"><input type="checkbox" id="onEq_${e.id}" ${S.equipment[e.id]?'checked':''}><span class="equipmentIcon">${e.icon}</span><span><strong>${e.name}</strong><span class="muted">実際に用意できていたらチェック</span></span></label>`).join('')}</div><button class="btn gold wide" onclick="onEquipmentNext()">設備状況を保存</button><button class="btn alt wide" style="margin-top:8px" onclick="S.onboardStep=4;save();renderOnboarding()">まだ揃っていないので後で確認</button>`,
+  `<div class="dots">○ ○ ○ ○ ●</div><h1>最初はここから</h1><div class="panel"><div style="font-size:75px;text-align:center">🥬</div><h2 style="text-align:center">ベビーリーフ</h2><p>初めてでも育てやすく、約20〜30日で収穫を目指せます。</p><ol><li>設備を揃える</li><li>プランター1に種をまく</li><li>毎日観察する</li><li>収穫して親に売る</li><li>自由研究にまとめる</li></ol></div><button class="btn gold wide" onclick="finishOnboarding()">農園を始める！</button>`
+ ];
+ oninner.innerHTML=screens[n];
+}
+function onNameNext(){let v=document.getElementById('onName').value.trim();if(!v){alert('名前を入力してください');return}S.name=v;S.research.name=v;S.onboardStep=2;save();renderOnboarding()}
+function onEquipmentNext(){EQ.filter(e=>e.required).forEach(e=>S.equipment[e.id]=document.getElementById('onEq_'+e.id).checked);S.onboardStep=4;save();renderOnboarding()}
+function finishOnboarding(){S.onboardDone=true;S.onboardStep=0;save();onboard.classList.remove('show');openPage('home')}
+render();onboarding();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+</body></html>
