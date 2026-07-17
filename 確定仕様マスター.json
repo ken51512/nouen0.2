@@ -1,0 +1,164 @@
+{
+  "project": "農園長者プロジェクト",
+  "version": "0.4",
+  "locked_rules": {
+    "approved_features_must_not_disappear": true,
+    "no_unapproved_spec_changes": true,
+    "points_cannot_buy_equipment": true,
+    "parent_loan_interest_rate": 0,
+    "max_planters": 8,
+    "reflector_positions": [
+      "上部",
+      "側面",
+      "背面"
+    ],
+    "crop_unlock_levels": {
+      "ベビーリーフ": 1,
+      "サラダ菜": 3,
+      "小松菜": 6,
+      "ラディッシュ": 9,
+      "ほうれん草": 13,
+      "レタス": 16,
+      "バジル": 20
+    },
+    "max_farm_level": 30
+  },
+  "requirements_count": 27,
+  "requirements": [
+    {
+      "id": "UX-001",
+      "requirement": "初回導入はポップアップ式で実画面を確認しながら説明",
+      "status": "実装"
+    },
+    {
+      "id": "UX-002",
+      "requirement": "目標として売上・利益・お小遣い増加・農園長者を明示",
+      "status": "実装"
+    },
+    {
+      "id": "UX-003",
+      "requirement": "ホームで目的・現在地・今やることを明示",
+      "status": "実装"
+    },
+    {
+      "id": "UX-004",
+      "requirement": "名前はホーム上部をタップして変更",
+      "status": "実装"
+    },
+    {
+      "id": "UX-005",
+      "requirement": "通常画面は下部5タブを常時表示",
+      "status": "実装"
+    },
+    {
+      "id": "AVA-001",
+      "requirement": "着替えは選択時に即時反映",
+      "status": "実装"
+    },
+    {
+      "id": "AVA-002",
+      "requirement": "着替えプレビューは全身表示",
+      "status": "実装"
+    },
+    {
+      "id": "FARM-001",
+      "requirement": "全プランターは空・0%から開始",
+      "status": "実装"
+    },
+    {
+      "id": "FARM-002",
+      "requirement": "成長は実時間連動で、記録ボタンでは増えない",
+      "status": "実装"
+    },
+    {
+      "id": "FARM-003",
+      "requirement": "初期4台、6台、最大8台へ設備増設",
+      "status": "一部実装"
+    },
+    {
+      "id": "FIN-001",
+      "requirement": "円とポイントを完全分離",
+      "status": "実装"
+    },
+    {
+      "id": "FIN-002",
+      "requirement": "ポイントは設備投資に使用不可",
+      "status": "実装"
+    },
+    {
+      "id": "FIN-003",
+      "requirement": "親ローンは無利息",
+      "status": "実装"
+    },
+    {
+      "id": "FIN-004",
+      "requirement": "返済割合は子どもが利益確定時に設定",
+      "status": "実装"
+    },
+    {
+      "id": "FIN-005",
+      "requirement": "累計・月次の売上と利益を表示",
+      "status": "実装"
+    },
+    {
+      "id": "FIN-006",
+      "requirement": "現在のプランターと作物から収穫・収支予測を表示",
+      "status": "実装"
+    },
+    {
+      "id": "FIN-007",
+      "requirement": "経営予測をグラフ表示",
+      "status": "実装"
+    },
+    {
+      "id": "FIN-008",
+      "requirement": "ROIと投資回収予測を表示",
+      "status": "実装"
+    },
+    {
+      "id": "EQP-001",
+      "requirement": "設備投資は実物購入・親承認が必要",
+      "status": "試作実装"
+    },
+    {
+      "id": "EQP-002",
+      "requirement": "設備投資前後の収支予測へ深掘り",
+      "status": "実装"
+    },
+    {
+      "id": "EQP-003",
+      "requirement": "反射板は上部・側面・背面の3か所で完了",
+      "status": "実装"
+    },
+    {
+      "id": "NUT-001",
+      "requirement": "野菜ごとの栄養素と体への働きを学習",
+      "status": "実装"
+    },
+    {
+      "id": "NUT-002",
+      "requirement": "医療効果を断定せず健康維持に関係する表現",
+      "status": "実装"
+    },
+    {
+      "id": "BADGE-001",
+      "requirement": "バッジのカテゴリ・条件・取得日・報酬を表示",
+      "status": "実装"
+    },
+    {
+      "id": "RES-001",
+      "requirement": "自由研究はA4 2/4/6ページ",
+      "status": "実装"
+    },
+    {
+      "id": "RES-002",
+      "requirement": "アプリ内プレビューと印刷専用画面を分離",
+      "status": "実装"
+    },
+    {
+      "id": "ARCH-001",
+      "requirement": "下部5タブはまとめ、画面内要素から樹形図的に深化",
+      "status": "実装"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+﻿仕様ID,確定要件,実装ファイル,実装箇所,テストID,状態
+UX-001,初回導入はポップアップ式で実画面を確認しながら説明,index.html,GUIDE_STEPS/startGuide,TEST-UX-01,実装
+UX-002,目標として売上・利益・お小遣い増加・農園長者を明示,index.html,導入画面/ホームgoalBanner,TEST-UX-02,実装
+UX-003,ホームで目的・現在地・今やることを明示,index.html,home/path/todayTask,TEST-UX-03,実装
+UX-004,名前はホーム上部をタップして変更,index.html,openProfile/saveProfile,TEST-UX-04,実装
+UX-005,通常画面は下部5タブを常時表示,index.html,.bottom/modal bottom offset,TEST-UX-05,実装
+AVA-001,着替えは選択時に即時反映,index.html,tryItem/renderAvatar,TEST-AVA-01,実装
+AVA-002,着替えプレビューは全身表示,index.html,.avatarCanvas,TEST-AVA-02,実装
+FARM-001,全プランターは空・0%から開始,index.html,fresh/confirmSow/stageFor,TEST-FARM-01,実装
+FARM-002,成長は実時間連動で、記録ボタンでは増えない,index.html,daysSince/stageFor/saveObservation,TEST-FARM-02,実装
+FARM-003,初期4台、6台、最大8台へ設備増設,設計維持,データモデル/将来画面,TEST-FARM-03,一部実装
+FIN-001,円とポイントを完全分離,index.html,sales/cost/points/pointLog,TEST-FIN-01,実装
+FIN-002,ポイントは設備投資に使用不可,index.html,openPoints/openInvestmentScenario,TEST-FIN-02,実装
+FIN-003,親ローンは無利息,index.html,openManagement loan,TEST-FIN-03,実装
+FIN-004,返済割合は子どもが利益確定時に設定,index.html,sellHarvest/approveSale,TEST-FIN-04,実装
+FIN-005,累計・月次の売上と利益を表示,index.html,render/home management,TEST-FIN-05,実装
+FIN-006,現在のプランターと作物から収穫・収支予測を表示,index.html,allForecast/managementDashboardHtml,TEST-FIN-06,実装
+FIN-007,経営予測をグラフ表示,index.html,chartHtml,TEST-FIN-07,実装
+FIN-008,ROIと投資回収予測を表示,index.html,roiPct/monthsToRecover,TEST-FIN-08,実装
+EQP-001,設備投資は実物購入・親承認が必要,index.html,saveEquipment/openInvestmentScenario,TEST-EQP-01,試作実装
+EQP-002,設備投資前後の収支予測へ深掘り,index.html,equipmentSimulationHtml/openInvestmentScenario,TEST-EQP-02,実装
+EQP-003,反射板は上部・側面・背面の3か所で完了,index.html,EQ definitions,TEST-EQP-03,実装
+NUT-001,野菜ごとの栄養素と体への働きを学習,index.html,openNutrition/openNutrient,TEST-NUT-01,実装
+NUT-002,医療効果を断定せず健康維持に関係する表現,index.html,nutrition text/openNutrient note,TEST-NUT-02,実装
+BADGE-001,バッジのカテゴリ・条件・取得日・報酬を表示,index.html,BADGES/openBadges/openBadge,TEST-BDG-01,実装
+RES-001,自由研究はA4 2/4/6ページ,index.html,openResearch/printResearch,TEST-RES-01,実装
+RES-002,アプリ内プレビューと印刷専用画面を分離,index.html,previewResearch/printResearch,TEST-RES-02,実装
+ARCH-001,下部5タブはまとめ、画面内要素から樹形図的に深化,index.html,branch/treeLink/crumb,TEST-ARCH-01,実装

@@ -1,4 +1,4 @@
-const CACHE = "nouen-choja-v03";
+const CACHE = "nouen-choja-v04";
 const ASSETS = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png"];
 self.addEventListener("install", e => {
   self.skipWaiting();

@@ -1,0 +1,70 @@
+{
+  "passed": 16,
+  "total": 16,
+  "tests": [
+    {
+      "id": "TEST-UX-01",
+      "pass": true
+    },
+    {
+      "id": "TEST-UX-02",
+      "pass": true
+    },
+    {
+      "id": "TEST-UX-05",
+      "pass": true
+    },
+    {
+      "id": "TEST-AVA-01",
+      "pass": true
+    },
+    {
+      "id": "TEST-AVA-02",
+      "pass": true
+    },
+    {
+      "id": "TEST-FARM-01",
+      "pass": true
+    },
+    {
+      "id": "TEST-FARM-02",
+      "pass": true
+    },
+    {
+      "id": "TEST-FIN-02",
+      "pass": true
+    },
+    {
+      "id": "TEST-FIN-06",
+      "pass": true
+    },
+    {
+      "id": "TEST-FIN-07",
+      "pass": true
+    },
+    {
+      "id": "TEST-FIN-08",
+      "pass": true
+    },
+    {
+      "id": "TEST-EQP-02",
+      "pass": true
+    },
+    {
+      "id": "TEST-NUT-01",
+      "pass": true
+    },
+    {
+      "id": "TEST-BDG-01",
+      "pass": true
+    },
+    {
+      "id": "TEST-RES-01",
+      "pass": true
+    },
+    {
+      "id": "TEST-ARCH-01",
+      "pass": true
+    }
+  ]
+}
