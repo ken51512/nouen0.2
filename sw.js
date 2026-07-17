@@ -1,4 +1,4 @@
-const CACHE='nouen-choja-v07-20260717';
+const CACHE='nouen-choja-v071-20260717';
 const CORE=['./','./index.html','./icon-192.png','./icon-512.png','./manifest.json'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));

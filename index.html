@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="農園長者">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>農園長者 v0.7 完成版MVPテスト</title>
+<title>農園長者 v0.7.1 収穫販売導線改善テスト</title>
 <style>
 :root{--g:#1f6b3a;--g2:#2f8c50;--pale:#f4f7ee;--card:#fff;--gold:#f2b337;--orange:#ee7c23;--ink:#243126;--muted:#748076;--line:#dfe8d8;--red:#c84c3c;--blue:#3978b4;--purple:#7a59a8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -109,7 +109,7 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px
 </head>
 <body>
 <div class="app">
-<header><div style="position:absolute;right:8px;top:6px;font-size:10px;background:#fff3;border:1px solid #ffffff55;border-radius:999px;padding:3px 7px">v0.7 TEST</div>
+<header><div style="position:absolute;right:8px;top:6px;font-size:10px;background:#fff3;border:1px solid #ffffff55;border-radius:999px;padding:3px 7px">v0.7.1 TEST</div>
  <div class="head">
   <img src="icon-192.png">
   <div><div class="title">農園長者</div><div class="tag">本物の野菜を育て、自分の努力でお小遣いを増やそう</div></div>
@@ -288,7 +288,7 @@ const EQUIPMENT_EFFECT={
  reflectBack:{yieldRate:0.02,costMonthly:0,label:'背面反射（仮）'}
 };
 function fresh(){return {
- version:'0.6',onboardDone:false,onboardStep:0,guideDone:false,guideStep:0,name:'',gender:'boy',avatar:'👦',
+ version:'0.7.1',onboardDone:false,onboardStep:0,guideDone:false,guideStep:0,name:'',gender:'boy',avatar:'👦',
  outfitSaved:{hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:''},outfitDraft:{hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:''},savedCoords:[],
  lv:1,xp:0,points:0,pointLog:[],sales:0,cost:0,loan:0,repayRate:30,
  equipment:Object.fromEntries(EQ.map(e=>[e.id,{owned:false,price:0,installed:false,date:null}])),
@@ -485,7 +485,7 @@ function debugCompleteAll(){debugSetupCrop();debugAddGrowth();debugSale();debugM
 function openParent(){show(head('親モード','その他 ＞ 親モード')+`<label>親PIN</label><input id="parentPin" type="password" inputmode="numeric" placeholder="初期PIN 1234"><button class="btn wide" onclick="parentLogin()">開く</button>`)}
 function parentLogin(){if(parentPin.value!=='1234')return alert('PINが違います');show(head('親ダッシュボード','その他 ＞ 親モード')+`<div class="notice">試作PINです。正式版では変更・生体認証へ対応します。</div><button class="metric" onclick="openParentPrices()"><span>買取価格・経費</span><b>設定</b></button><button class="metric" onclick="openManagement('loan')"><span>親ローン</span><b>${yen(S.loan)}</b></button><button class="metric" onclick="openManagement('equipment')"><span>設備投資</span><b>${yen(equipmentInvestment())}</b></button>`)}
 function openParentPrices(){show(head('買取価格・経費','親モード ＞ 買取価格・経費')+`<h3>1プランターあたりのランニングコスト</h3><label>電気代（円）</label><input id="electricCost" type="number" value="${S.utilityCost.electric}"><label>水道代（円）</label><input id="waterCost" type="number" value="${S.utilityCost.water}"><button class="btn alt wide" onclick="saveUtilityCost()">電気代・水道代を保存</button><h3>野菜の買取価格</h3>`+CROPS.map(c=>`<label>${c.name}（円/100g）</label><input type="number" value="${S.prices[c.id]}" onchange="S.prices['${c.id}']=+this.value;save()">`).join(''))}
-function openFarmLayer(type){if(type==='planters')return; if(type==='equipment')return openManagement('equipment');if(type==='records'){let all=S.planters.flatMap(p=>p.observations.map(o=>({...o,planter:p.id,crop:p.crop})));show(head('成長記録','農園 ＞ 成長記録')+(all.map(o=>`<div class="metric"><span>${o.date}・プランター${o.planter}<br><small>${o.comment}</small></span><b>${o.photo?'📷':''}</b></div>`).join('')||'<p class="muted">まだ記録がありません。</p>'));}if(type==='harvest')openManagement('sales')}
+function openFarmLayer(type){if(type==='planters')return; if(type==='equipment')return openManagement('equipment');if(type==='harvest')return openHarvestHub();if(type==='records'){let all=S.planters.flatMap(p=>p.observations.map(o=>({...o,planter:p.id,crop:p.crop})));show(head('成長記録','農園 ＞ 成長記録')+(all.map(o=>`<div class="metric"><span>${o.date}・プランター${o.planter}<br><small>${o.comment}</small></span><b>${o.photo?'📷':''}</b></div>`).join('')||'<p class="muted">まだ記録がありません。</p>'));}if(type==='harvest')openManagement('sales')}
 function openLearnLayer(type){if(type==='crops')return;if(type==='nutrition')show(head('栄養学習','図鑑 ＞ 栄養')+CROPS.filter(c=>S.lv>=c.lv).map(c=>`<button class="metric" onclick="openNutrition('${c.id}')"><span>${c.icon} ${c.name}</span><b>見る</b></button>`).join(''));if(type==='english')show(head('英語','図鑑 ＞ 英語')+CROPS.filter(c=>S.lv>=c.lv).map(c=>`<button class="metric" onclick="gainEnglish('${c.id}')"><span>${c.name}</span><b>${c.en} 🔊</b></button>`).join(''));if(type==='recipe')show(head('レシピ','図鑑 ＞ レシピ')+`<p class="notice">野菜をタップすると、その野菜のレシピが表示されます。</p>`+CROPS.filter(c=>S.debug||S.lv>=c.lv).map(c=>`<button class="metric" onclick="openRecipes('${c.id}')"><span>${c.icon} ${c.name}</span><b>レシピを見る</b></button>`).join(''))}
 function gainEnglish(id){earnBadge('english1');save();openCrop(id)}
 
@@ -508,9 +508,29 @@ function openNutrient(cropId,index){
 }
 
 function openNutrition(id){let c=crop(id);show(head(c.name+'の栄養','図鑑 ＞ '+c.name+' ＞ 栄養')+`<div class="notice">栄養素をタップすると、体のどこでどんな働きに関係するか学べます。</div>`+c.nutrition.map((n,i)=>{let m=nutrientBodyMap(n[0]);return `<button class="treeLink" onclick="openNutrient('${id}',${i})"><span><b>${m[0]} ${n[0]}</b><br><small>${m[1]}</small></span><b>深掘り →</b></button>`}).join('')+(c.note?`<div class="notice">${c.note}</div>`:''))}
+
+function openHarvestHub(){
+ const active=S.planters.filter(p=>p.crop);
+ const rows=active.map(p=>{const c=crop(p.crop),st=stageFor(p);st.pct=missionAdjustedPct(p);let status=p.sold?'販売済み':p.harvested?'収穫済み・販売待ち':st.pct>=100||S.debug?'収穫できます':`生育 ${st.pct}%`;
+ return `<button class="treeLink" onclick="openPlanter(${p.id})"><span><b>プランター${p.id}・${c.name}</b><br><small>${status}</small></span><b>開く →</b></button>`}).join('');
+ show(head('収穫・販売','農園 ＞ 収穫・販売')+`<div class="notice">各プランターを開くと、収穫前でも「収穫ボタン」と「親に売る」ボタンの場所を確認できます。収穫は生育100%で実行でき、販売は収穫写真と収穫量の登録後に開放されます。</div>${rows||'<p class="muted">栽培中のプランターがありません。</p>'}`)
+}
+
 function openCrop(id){let c=crop(id);if(S.lv<c.lv)return alert(`Lv.${c.lv}で解放されます`);show(head(c.name,'図鑑 ＞ 野菜図鑑 ＞ '+c.name)+`<div class="bigveg">${c.icon}</div><button class="metric" onclick="gainEnglish('${id}')"><span>英語名</span><b>${c.en} 🔊</b></button><button class="metric" onclick="openNutrition('${id}')"><span>栄養と体への働き</span><b>深掘り</b></button><button class="metric" onclick="openRecipes('${id}')"><span>おすすめレシピ</span><b>見る 🍳</b></button><div class="metric"><span>収穫目安</span><b>${c.days}</b></div><div class="metric"><span>種・株の間隔</span><b>${c.gap}</b></div><div class="metric"><span>適温</span><b>${c.temp}</b></div><div class="notice">${c.tip}</div>`)}
 function openPlanter(id){let p=S.planters.find(x=>x.id===id);if(!p.crop){if(!equipmentReady())return show(head('設備確認が必要','農園 ＞ プランター'+id)+`<div class="alert">必要設備が揃っているか先に確認してください。</div><button class="btn wide" onclick="closeModal();openPage('more')">設備チェックへ</button>`);return show(head('育てる野菜を選ぶ','農園 ＞ プランター'+id)+CROPS.filter(c=>S.lv>=c.lv).map(c=>`<button class="btn alt wide" style="margin:4px 0" onclick="chooseCrop(${id},'${c.id}')">${c.icon} ${c.name}${c.id==='baby'?'（おすすめ）':''}</button>`).join(''))}
- let c=crop(p.crop),st=stageFor(p);st.pct=missionAdjustedPct(p);show(head('プランター'+id+'：'+c.name,`農園 ＞ プランター${id} ＞ ${c.name}`)+`<div class="bigveg">${c.icon}</div><div class="progress"><i style="width:${st.pct}%"></i></div><button class="metric" onclick="openCrop('${c.id}')"><span>生育状況</span><b>${st.pct}%・${st.label}</b></button><button class="metric" onclick="openManagement('profit')"><span>この作物の経営</span><b>収支を見る</b></button><div class="metric"><span>実際の経過</span><b>${st.days}日目</b></div><div class="grid2"><button class="btn" onclick="waterMission(${id})">💧 水やりミッション</button><button class="btn alt" onclick="observation(${id})">📷 観察ミッション</button></div>${(st.pct>=100||S.debug)&&!p.harvested?`<button class="btn gold wide" style="margin-top:8px" onclick="harvest(${id})">✂️ 収穫ボタン</button>`:''}${p.harvested&&!p.sold?`<button class="btn blue wide" style="margin-top:8px" onclick="sellHarvest(${id})">💰 親に売る</button>`:''}<h3>成長記録</h3>${timelineHtml(p)}`)}
+ let c=crop(p.crop),st=stageFor(p);st.pct=missionAdjustedPct(p);
+ const ready=(st.pct>=100||S.debug);
+ const harvestButton=p.harvested
+  ? `<button class="btn gold wide" style="margin-top:8px" disabled>✅ 収穫完了</button>`
+  : ready
+   ? `<button class="btn gold wide" style="margin-top:8px" onclick="harvest(${id})">✂️ 収穫ボタン</button>`
+   : `<button class="btn gold wide" style="margin-top:8px;opacity:.55" onclick="alert('まだ収穫時期ではありません。生育100%になると収穫できます。現在${st.pct}%です。')">✂️ 収穫ボタン（現在${st.pct}%）</button>`;
+ const sellButton=p.sold
+  ? `<button class="btn blue wide" style="margin-top:8px" disabled>✅ 親へ販売済み</button>`
+  : p.harvested
+   ? `<button class="btn blue wide" style="margin-top:8px" onclick="sellHarvest(${id})">💰 親に売る</button>`
+   : `<button class="btn blue wide" style="margin-top:8px;opacity:.55" onclick="alert('先に収穫ボタンから、写真と収穫量を登録してください。')">💰 親に売る（収穫後に開放）</button>`;
+ show(head('プランター'+id+'：'+c.name,`農園 ＞ プランター${id} ＞ ${c.name}`)+`<div class="bigveg">${c.icon}</div><div class="progress"><i style="width:${st.pct}%"></i></div><button class="metric" onclick="openCrop('${c.id}')"><span>生育状況</span><b>${st.pct}%・${st.label}</b></button><button class="metric" onclick="openManagement('profit')"><span>この作物の経営</span><b>収支を見る</b></button><div class="metric"><span>実際の経過</span><b>${st.days}日目</b></div><div class="grid2"><button class="btn" onclick="waterMission(${id})">💧 水やりミッション</button><button class="btn alt" onclick="observation(${id})">📷 観察ミッション</button></div><h3>収穫・販売</h3>${harvestButton}${sellButton}<h3>成長記録</h3>${timelineHtml(p)}`)}
 function chooseCrop(id,cid){let p=S.planters.find(x=>x.id===id);p.crop=cid;show(head(crop(cid).name+'の種まき','農園 ＞ プランター'+id+' ＞ 種まき')+`<ol><li>土を平らにする</li><li>種を${crop(cid).gap}でまく</li><li>薄く土をかける</li><li>優しく水をあげる</li></ol><div class="notice">実際に種をまいてから押してください。</div><button class="btn wide" onclick="confirmSow(${id})">実際に種をまいた</button>`)}
 function confirmSow(id){let p=S.planters.find(x=>x.id===id);p.sowDate=dateOnly();p.observations=[];p.waterEvents=[];S.xp+=20;gainPoints(10,'種まき');earnBadge('firstSow');levelCheck();save();closeModal();alert('0%からスタートしました。')}
 function timelineHtml(p){return p.observations.length?`<div class="timeline">${p.observations.slice().reverse().map(o=>`<div class="day"><strong>${o.day}日目（${o.date}）</strong><div>${o.comment}</div>${o.photo?'📷 写真あり':''}</div>`).join('')}</div>`:'<p class="muted">まだ記録がありません。</p>'}
