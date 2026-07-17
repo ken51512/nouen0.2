@@ -1,0 +1,12 @@
+﻿仕様ID,確定要件,実装箇所,テストID,状態
+UX-006,ホームに今・次のミッションを表示,getMissions/render,TEST-UX-06,実装
+NOTIF-001,チュートリアルで通知許可説明と要求,requestNotificationsAndFinish,TEST-NOTIF-01,実装
+NOTIF-002,水やり・5日観察ミッション通知導線,getMissions/openFAQ,TEST-NOTIF-02,実装（ブラウザ制約あり）
+FARM-004,収穫ボタンで写真必須・収穫完了認識,harvest/completeHarvest,TEST-FARM-04,実装
+SALE-001,収穫後のみ親に売る,openPlanter/sellHarvest,TEST-SALE-01,実装
+FIN-009,電気代・水道代を各50円初期設定,utilityCost/openParent/saveUtilityCost,TEST-FIN-09,実装
+FIN-010,経営タブに設備投資と収支予測,management page/openManagement,TEST-FIN-10,実装
+REC-001,野菜図鑑から野菜別レシピ表示,openCrop/openRecipes,TEST-REC-01,実装
+CEO-001,名前の後に社長を付ける,render/profile/onboarding,TEST-CEO-01,実装
+NAV-001,下部タブを経営に変更し着替えはその他,bottom nav/more,TEST-NAV-01,実装
+HELP-001,困ったときは？Q&A,openFAQ,TEST-HELP-01,実装

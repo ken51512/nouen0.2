@@ -309,9 +309,20 @@ function normalizeState(){
 }
 normalizeState();
 
-function save(){localStorage.setItem(KEY,JSON.stringify(S));render()}
+function save(){
+    try{
+        localStorage.setItem(KEY,JSON.stringify(S));
+    }catch(e){
+        console.error('Save failed',e);
+    }
+    render();
+}
 function yen(n){return Math.round(n||0).toLocaleString()+'円'}
-function dateOnly(){return new Date().toISOString().slice(0,10)}
+function dateOnly(){
+ const d=new Date();
+ d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+ return d.toISOString().slice(0,10);
+}
 function crop(id){return CROPS.find(c=>c.id===id)}
 function monthRows(){let m=dateOnly().slice(0,7);return S.salesLog.filter(x=>x.date.startsWith(m))}
 function currentMonthSales(){return monthRows().reduce((a,x)=>a+x.sales,0)}
