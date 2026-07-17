@@ -1,13 +1,11 @@
 {
   "name": "農園長者",
   "short_name": "農園長者",
-  "description": "本物の野菜を育て、売上と利益を上げ、自分の努力でお小遣いを増やす教育アプリ",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#F4F7EE",
-  "theme_color": "#1F6B3A",
-  "lang": "ja",
+  "background_color": "#f4f7ef",
+  "theme_color": "#1f6b3a",
+  "description": "野菜栽培・経営・理科・食育を一つの自由研究に自動編集する教育アプリ",
   "icons": [
     {
       "src": "icon-192.png",

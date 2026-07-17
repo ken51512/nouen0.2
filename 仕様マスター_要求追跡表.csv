@@ -26,3 +26,15 @@ BADGE-001,バッジのカテゴリ・条件・取得日・報酬を表示,index.
 RES-001,自由研究はA4 2/4/6ページ,index.html,openResearch/printResearch,TEST-RES-01,実装
 RES-002,アプリ内プレビューと印刷専用画面を分離,index.html,previewResearch/printResearch,TEST-RES-02,実装
 ARCH-001,下部5タブはまとめ、画面内要素から樹形図的に深化,index.html,branch/treeLink/crumb,TEST-ARCH-01,実装
+TEST-001,テストモードで全機能を開放,index.html,openDebug/toggleDebug,TEST-TST-01,実装
+TEST-002,5日ごとの成長・収穫・販売・料理データを短時間で生成,index.html,debugCompleteAll,TEST-TST-02,実装
+RES-003,学校名・学年・クラス・名前を表紙へ出力,index.html,openResearch/printResearch,TEST-RES-03,実装
+RES-004,初期設備・各費用・栽培野菜を自動記入,index.html,equipmentRowsHtml/cropNames,TEST-RES-04,実装
+RES-005,5日ごとの成長写真とコメントを自動配置,index.html,observationsHtml/saveObservation,TEST-RES-05,実装
+RES-006,月次売上・経費・利益・お小遣い決算書を自動生成,index.html,monthlyStatementHtml,TEST-RES-06,実装
+RES-007,追加投資とプランター増設の回収期間・収益改善を記載,index.html,investmentReportHtml/ROI,TEST-RES-07,実装
+RES-008,栽培条件・設備による解決・光合成・創意工夫を記録,index.html,researchScience/researchInnovation,TEST-RES-08,実装
+RES-009,料理写真・レシピ・感想を記録して自動配置,index.html,saveTaste/tastesHtml,TEST-RES-09,実装
+RES-010,栄養素と働きを栽培野菜から自動記入,index.html,nutritionReportHtml,TEST-RES-10,実装
+RES-011,次の野菜・次回利益目標・アプリ連動の感想を記録,index.html,researchNext/researchApp,TEST-RES-11,実装
+RES-012,活動の都度コメント入力を誘導,index.html,promptCard/売却後導線,TEST-RES-12,実装

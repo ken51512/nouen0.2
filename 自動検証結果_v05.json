@@ -1,0 +1,18 @@
+{
+  "js_syntax_pass": true,
+  "checks": {
+    "openDebug": true,
+    "debugCompleteAll": true,
+    "researchSchool": true,
+    "monthlyStatementHtml": true,
+    "investmentReportHtml": true,
+    "observationsHtml": true,
+    "tastesHtml": true,
+    "nutritionReportHtml": true,
+    "researchApp": true,
+    "researchNext": true,
+    "fileData(file)": true
+  },
+  "passed": 11,
+  "total": 11
+}

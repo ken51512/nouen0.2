@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="農園長者">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>農園長者 v0.4</title>
+<title>農園長者 v0.5</title>
 <style>
 :root{--g:#1f6b3a;--g2:#2f8c50;--pale:#f4f7ee;--card:#fff;--gold:#f2b337;--orange:#ee7c23;--ink:#243126;--muted:#748076;--line:#dfe8d8;--red:#c84c3c;--blue:#3978b4;--purple:#7a59a8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -92,6 +92,17 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px
 .roiBox{background:linear-gradient(135deg,#edf8ea,#fff4ca);border:1px solid #c7dfb8;border-radius:14px;padding:12px}
 .treeLink{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;border-bottom:1px dashed var(--line);background:transparent;padding:12px 3px;text-align:left}.treeLink b{color:var(--g)}
 .nutriBody{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:8px}.bodyCard{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fff;text-align:center}.bodyCard .icon{font-size:28px}
+
+
+/* v0.5 research project + test mode */
+.debugBadge{display:inline-block;background:#7b2cbf;color:#fff;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:900}
+.researchProgress{height:15px;background:#e8eee6;border-radius:999px;overflow:hidden}.researchProgress i{display:block;height:100%;background:linear-gradient(90deg,#5fad62,#e0b63e)}
+.checklist{display:grid;gap:7px}.checkitem{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);padding:10px;border-radius:12px;background:#fff}.checkitem.done{background:#eef9ed}
+.promptCard{border:2px solid #e5bd48;background:#fff8d7;border-radius:16px;padding:12px;margin:10px 0}.promptCard b{color:#174e2c}
+.researchChapter{border-left:5px solid #5ca65e;padding:10px 12px;margin:12px 0;background:#f7fbf5;border-radius:0 14px 14px 0}
+.photoThumb{width:100%;max-height:180px;object-fit:cover;border-radius:12px;border:1px solid var(--line);margin-top:8px}
+.moneyFlow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:5px;align-items:center;text-align:center}.moneyFlow>div{padding:8px;border:1px solid var(--line);border-radius:12px;background:#fff}
+@media(max-width:390px){.moneyFlow{grid-template-columns:1fr}.moneyFlow .arrow{transform:rotate(90deg)}}
 
 </style>
 </head>
@@ -183,7 +194,7 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px
   <button onclick="openManagement()"><span class="ico">💰</span><b>経営</b><small>売上・原価・利益・お金の流れ</small></button>
   <button onclick="openBadges()"><span class="ico">🏅</span><b>バッジ</b><small>取得条件・進捗・報酬</small></button>
   <button onclick="openResearch()"><span class="ico">📚</span><b>自由研究</b><small>A4 2・4・6ページ</small></button>
-  <button onclick="openParent()"><span class="ico">👨‍👩‍👧</span><b>親モード</b><small>価格・承認・ローン</small></button>
+  <button onclick="openParent()"><span class="ico">👨‍👩‍👧</span><b>親モード</b><small>価格・承認・ローン</small></button><button onclick="openDebug()"><span class="ico">🧪</span><b>テストモード</b><small>全開放・時間・収穫・販売</small></button>
  </div></div>
  <div class="card"><h2>設備チェック・管理</h2><div id="equipmentList"></div><button class="btn wide" onclick="saveEquipment()">設備状況を保存</button></div>
  <div class="card"><h2>使い方</h2><button class="btn gold wide" onclick="replayGuide()">ポップアップ・チュートリアルをもう一度見る</button></div><div class="card"><h2>データ</h2><div class="grid2"><button class="btn alt" onclick="exportData()">バックアップ</button><button class="btn red" onclick="resetData()">初期化</button></div></div>
@@ -208,7 +219,7 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px
 
 
 <script>
-const KEY='nouen-choja-mvp-v04';
+const KEY='nouen-choja-mvp-v05';
 const CROPS=[
 {id:'baby',lv:1,name:'ベビーリーフ',en:'Baby Leaf',icon:'🥬',days:'20〜30日',gap:'1〜2cm',temp:'15〜25℃',tip:'ばらまきか筋まき。発芽までは乾かさず、葉が10cmほどで収穫。',nutrition:[
  ['β-カロテン','体内で必要に応じてビタミンAに変わり、皮膚や粘膜、暗い場所で目が慣れる働きの維持を助けます。'],
@@ -271,13 +282,13 @@ const EQUIPMENT_EFFECT={
  reflectBack:{yieldRate:0.02,costMonthly:0,label:'背面反射（仮）'}
 };
 function fresh(){return {
- version:'0.4',onboardDone:false,onboardStep:0,guideDone:false,guideStep:0,name:'',gender:'boy',avatar:'👦',
+ version:'0.5',onboardDone:false,onboardStep:0,guideDone:false,guideStep:0,name:'',gender:'boy',avatar:'👦',
  outfitSaved:{hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:''},outfitDraft:{hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:''},savedCoords:[],
  lv:1,xp:0,points:0,pointLog:[],sales:0,cost:0,loan:0,repayRate:30,
  equipment:Object.fromEntries(EQ.map(e=>[e.id,{owned:false,price:0,installed:false,date:null}])),
  planters:Array.from({length:4},(_,i)=>({id:i+1,crop:null,sowDate:null,observations:[],waterEvents:[],harvested:false})),
  prices:{baby:200,salad:200,komatsu:150,radish:150,spinach:180,lettuce:200,basil:120},
- tastes:[],salesLog:[],research:{name:'',clazz:'',title:'ベビーリーフの成長と収穫の研究',comment:'',completed:false},
+ tastes:[],salesLog:[],investmentLog:[],debug:false,research:{school:'',grade:'',clazz:'',name:'',title:'野菜を育てて売ってお小遣いを稼ぐ研究',purpose:'',initialReason:'',scienceLearning:'',innovation:'',moneyLearning:'',appFeeling:'',nextCrop:'',nextGoal:'',comment:'',completed:false},
  badges:{},profitChecks:0
 }}
 let S=JSON.parse(localStorage.getItem(KEY)||'null')||fresh();
@@ -286,7 +297,7 @@ function normalizeState(){
  S.guideDone=!!S.guideDone;S.guideStep=S.guideStep||0;
  S.outfitSaved={hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:'',...(S.outfitSaved||{})};
  S.outfitDraft={...S.outfitSaved,...(S.outfitDraft||{})};
- S.savedCoords=S.savedCoords||[];
+ S.savedCoords=S.savedCoords||[];S.investmentLog=S.investmentLog||[];S.debug=!!S.debug;S.research={school:'',grade:'',clazz:'',name:S.name||'',title:'野菜を育てて売ってお小遣いを稼ぐ研究',purpose:'',initialReason:'',scienceLearning:'',innovation:'',moneyLearning:'',appFeeling:'',nextCrop:'',nextGoal:'',comment:'',completed:false,...(S.research||{})};
  S.equipment=S.equipment||{};
  EQ.forEach(e=>{if(typeof S.equipment[e.id]==='boolean')S.equipment[e.id]={owned:S.equipment[e.id],price:0,installed:S.equipment[e.id],date:null};if(!S.equipment[e.id])S.equipment[e.id]={owned:false,price:0,installed:false,date:null}});
 }
@@ -312,13 +323,13 @@ function gainPoints(n,source){if(!n)return;S.points+=n;S.pointLog.push({date:dat
 function earnBadge(id){if(S.badges[id])return;let b=BADGES.find(x=>x.id===id);if(!b)return;S.badges[id]={date:dateOnly()};gainPoints(b.points,'バッジ：'+b.name)}
 function openPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('on'));(btn||document.querySelector(`.bottom button[data-p="${id}"]`))?.classList.add('on');closeModal();window.scrollTo(0,0);render()}
 function render(){
- nameTop.textContent=S.name||'なまえ';faceTop.textContent=S.avatar;lvTop.textContent=S.lv;profitTop.textContent=yen(currentMonthProfit());pointTop.textContent=S.points+'P';
+ nameTop.textContent=(S.name||'なまえ')+(S.debug?' 🧪':'');faceTop.textContent=S.avatar;lvTop.textContent=S.lv;profitTop.textContent=yen(currentMonthProfit());pointTop.textContent=S.points+'P';
  salesAll.textContent=yen(S.sales);salesMonth.textContent=yen(currentMonthSales());profitAll.textContent=yen(S.sales-S.cost);profitMonth.textContent=yen(currentMonthProfit());loanBalance.textContent=yen(S.loan);equipmentTotal.textContent=yen(equipmentInvestment());planterCount.textContent=S.planters.length+'台';
  let ns=nextStep();path.innerHTML=PATH.map(x=>`<div class="step ${pathDone(x[0])?'done':ns&&ns[0]===x[0]?'current':''}"><span class="ico">${pathDone(x[0])?'✅':x[2]}</span>${x[1]}</div>`).join('');
  let td=taskData(ns?.[0]);todayTask.textContent=td[0];taskWhy.textContent=td[1];taskButton.textContent=td[2];
  let html=S.planters.map(p=>{let c=p.crop?crop(p.crop):null,st=stageFor(p);return `<button class="planter" onclick="openPlanter(${p.id})"><div class="veg">${c?c.icon:'＋'}</div><strong>プランター${p.id}</strong><span class="pill">${c?st.pct+'%':'空き'}</span>${c?`<div class="small">${st.label}・${st.days}日目</div>`:''}</button>`}).join('');
  homePlanters.innerHTML=html;farmPlanters.innerHTML=html;
- cropBook.innerHTML=CROPS.map(c=>`<button class="planter" onclick="openCrop('${c.id}')" style="opacity:${S.lv>=c.lv?1:.45}"><div class="veg">${c.icon}</div><strong>${c.name}</strong><small>${S.lv>=c.lv?c.en:'Lv.'+c.lv+'で解放'}</small></button>`).join('');
+ cropBook.innerHTML=CROPS.map(c=>`<button class="planter" onclick="openCrop('${c.id}')" style="opacity:${(S.debug||S.lv>=c.lv)?1:.45}"><div class="veg">${c.icon}</div><strong>${c.name}</strong><small>${(S.debug||S.lv>=c.lv)?c.en:'Lv.'+c.lv+'で解放'}</small></button>`).join('');
  equipmentList.innerHTML=EQ.map(e=>{let x=S.equipment[e.id];return `<div class="checkrow"><input type="checkbox" id="eq_${e.id}" ${x?.owned?'checked':''}><span class="equipmentIcon">${e.icon}</span><span style="flex:1"><strong>${e.name}${e.required?'（必要）':'（任意）'}</strong><input id="price_${e.id}" type="number" value="${x?.price||0}" placeholder="実際の購入価格（円）"><span class="muted">実際に用意できていればチェック</span></span></div>`}).join('');
  renderAvatar();
  renderDress(window.currentDressCategory||'hat');
@@ -422,53 +433,48 @@ function addLoan(){S.loan+=+loanAdd.value||0;save();openManagement('loan')}
 function openBadges(){let cats=[...new Set(BADGES.map(b=>b.cat))];show(head('バッジ','その他 ＞ バッジ')+`<div class="tabs"><button class="tab on" onclick="filterBadges('all',this)">すべて</button>${cats.map(c=>`<button class="tab" onclick="filterBadges('${c}',this)">${c}</button>`).join('')}</div><div id="badgeList" class="grid2"></div>`);filterBadges('all')}
 function filterBadges(cat,btn){document.querySelectorAll('#sheet .tab').forEach(x=>x.classList.remove('on'));btn?.classList.add('on');badgeList.innerHTML=BADGES.filter(b=>cat==='all'||b.cat===cat).map(b=>{let got=S.badges[b.id];return `<button class="badgeCard ${got?'':'lockedBadge'}" onclick="openBadge('${b.id}')"><div class="badgeIcon">${got?b.icon:'❓'}</div><b>${b.name}</b><div class="small">${got?'取得済み':'未取得'}</div></button>`}).join('')}
 function openBadge(id){let b=BADGES.find(x=>x.id===id),got=S.badges[id];show(head(b.name,'その他 ＞ バッジ ＞ '+b.cat)+`<div class="bigveg">${got?b.icon:'❓'}</div><div class="metric"><span>取得条件</span><b>${b.desc}</b></div><div class="metric"><span>報酬</span><b>${b.points}P</b></div><div class="metric"><span>取得日</span><b>${got?.date||'未取得'}</b></div>`)}
-function openResearch(){show(head('自由研究','その他 ＞ 自由研究')+`<label>テンプレート</label><select id="template"><option value="2">A4 2ページ 簡易版</option><option value="4" selected>A4 4ページ 標準版</option><option value="6">A4 6ページ 詳細版</option></select><label>名前</label><input id="studentName" value="${S.research.name||S.name}"><label>学年・組</label><input id="studentClass" value="${S.research.clazz||''}"><label>タイトル</label><input id="researchTitle" value="${S.research.title}"><label>感想・考察</label><textarea id="researchComment">${S.research.comment}</textarea><div class="grid2"><button class="btn alt" onclick="saveResearch()">保存して戻る</button><button class="btn" onclick="previewResearch()">A4プレビュー</button></div>`)}
-function saveResearch(){S.research={...S.research,name:studentName.value,clazz:studentClass.value,title:researchTitle.value,comment:researchComment.value};save();closeModal()}
-function previewResearch(){saveResearch();let pages=+template.value;show(head(`A4プレビュー（${pages}ページ）`,'その他 ＞ 自由研究 ＞ プレビュー')+`<div class="notice">アプリ内プレビューです。下部タブは常に利用できます。印刷時だけ印刷専用レイアウトを開きます。</div><div class="card"><h3>${S.research.title}</h3><p>名前：${S.research.name}　${S.research.clazz}</p><p>${S.research.comment||'感想・考察を入力してください。'}</p></div><div class="grid2"><button class="btn alt" onclick="openResearch()">編集に戻る</button><button class="btn" onclick="printResearch(${pages})">印刷する</button></div>`)}
-function printResearch(pages){S.research.completed=true;earnBadge('research1');save();let w=window.open('','_blank');w.document.write(`<html><head><meta name="viewport" content="width=device-width"><title>${S.research.title}</title><style>@page{size:A4;margin:15mm}body{font-family:sans-serif}h1{color:#1f6b3a}.page{page-break-after:always}.box{border:1px solid #bbb;padding:12px;margin:12px 0}
-/* v0.4: specification-preserving UX additions */
-.modal{bottom:76px;inset:auto 0 76px 0;height:calc(100% - 76px)}
-.sheet{max-height:100%;height:auto}
-.guideMask{position:fixed;inset:0;background:#0009;z-index:60;display:none;pointer-events:none}
-.guideMask.show{display:block}
-.guideCard{position:fixed;left:14px;right:14px;bottom:22px;max-width:492px;margin:auto;background:#fff;border-radius:20px;padding:16px;z-index:62;box-shadow:0 18px 55px #0008;display:none}
-.guideCard.show{display:block}
-.guideCard h2{margin:0 0 7px;color:var(--g)}
-.guideCard .guideActions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:12px}
-.guideTarget{position:relative;z-index:61!important;outline:5px solid #ffd458;box-shadow:0 0 0 9999px #00000080,0 0 25px #ffd458!important;border-radius:14px}
-.goalBanner{background:linear-gradient(135deg,#fff0ad,#e8f6da);border:2px solid #ebbd37;border-radius:18px;padding:15px;text-align:center}
-.goalBanner .goalMain{font-size:20px;font-weight:950;color:#174e2c}
-.goalBanner .goalSub{font-size:13px;margin-top:6px}
-.avatarCanvas{position:relative;width:190px;height:270px;margin:auto}
-.avatarCanvas .hairBack{position:absolute;left:61px;top:27px;width:68px;height:72px;background:#49311f;border-radius:35px 35px 25px 25px}
-.avatarCanvas .headPart{position:absolute;left:67px;top:35px;width:56px;height:62px;border-radius:48% 48% 44% 44%;background:var(--skin,#e5b188);z-index:3}
-.avatarCanvas .hairFront{position:absolute;left:64px;top:27px;width:64px;height:31px;background:#49311f;border-radius:35px 35px 15px 15px;z-index:4}
-.avatarCanvas .eye{position:absolute;top:61px;width:5px;height:7px;background:#2a211c;border-radius:50%;z-index:5}
-.avatarCanvas .eye.l{left:82px}.avatarCanvas .eye.r{left:107px}
-.avatarCanvas .smile{position:absolute;left:91px;top:78px;width:16px;height:8px;border-bottom:3px solid #9c4d45;border-radius:0 0 18px 18px;z-index:5}
-.avatarCanvas .neck{position:absolute;left:88px;top:91px;width:20px;height:18px;background:var(--skin,#e5b188);z-index:2}
-.avatarCanvas .torso{position:absolute;left:57px;top:103px;width:82px;height:82px;background:var(--top,#4b9d55);border-radius:20px 20px 12px 12px;z-index:3}
-.avatarCanvas .arm{position:absolute;top:111px;width:22px;height:85px;background:var(--skin,#e5b188);border-radius:14px;z-index:2}
-.avatarCanvas .arm.l{left:39px;transform:rotate(8deg)}.avatarCanvas .arm.r{right:39px;transform:rotate(-8deg)}
-.avatarCanvas .pants{position:absolute;left:61px;top:174px;width:74px;height:47px;background:var(--pants,#315b82);z-index:4;border-radius:7px}
-.avatarCanvas .leg{position:absolute;top:209px;width:28px;height:49px;background:var(--pants,#315b82);border-radius:0 0 10px 10px}
-.avatarCanvas .leg.l{left:65px}.avatarCanvas .leg.r{left:103px}
-.avatarCanvas .shoe{position:absolute;top:246px;width:35px;height:18px;background:var(--shoe,#5b3a24);border-radius:13px 13px 7px 7px;z-index:5}
-.avatarCanvas .shoe.l{left:59px}.avatarCanvas .shoe.r{left:103px}
-.avatarCanvas .hatLayer{position:absolute;left:50%;top:0;transform:translateX(-50%);font-size:65px;z-index:7;line-height:1}
-.avatarCanvas .accessoryLayer{position:absolute;right:26px;top:99px;font-size:40px;z-index:8}
-.avatarCanvas .funLayer{position:absolute;left:50%;top:92px;transform:translateX(-50%);font-size:96px;z-index:9;pointer-events:none}
-.avatarCanvas .namePlate{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);background:#fff8;border:1px solid #fff;border-radius:999px;padding:4px 11px;font-size:12px;font-weight:800;white-space:nowrap;z-index:10}
-.chart{display:flex;align-items:flex-end;gap:7px;height:142px;padding:12px 8px 4px;border-left:1px solid #ccd7c7;border-bottom:1px solid #ccd7c7;margin:10px 0}
-.chartCol{flex:1;text-align:center;min-width:28px}.chartBar{width:100%;min-height:3px;border-radius:7px 7px 0 0;background:linear-gradient(#78c68a,#287847)}.chartBar.cost{background:linear-gradient(#f3b56f,#dd792a)}.chartBar.profit{background:linear-gradient(#83a8dd,#3a70b3)}.chartLabel{font-size:9px;color:var(--muted);margin-top:4px}
-.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:10px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:3px}
-.kpiGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.kpi{border:1px solid var(--line);border-radius:13px;padding:10px;background:#fff}.kpi small{color:var(--muted)}.kpi b{display:block;color:var(--g);font-size:18px;margin-top:3px}
-.forecastRow{border:1px solid var(--line);border-radius:13px;padding:10px;margin:7px 0;background:#fff}
-.roiBox{background:linear-gradient(135deg,#edf8ea,#fff4ca);border:1px solid #c7dfb8;border-radius:14px;padding:12px}
-.treeLink{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;border-bottom:1px dashed var(--line);background:transparent;padding:12px 3px;text-align:left}.treeLink b{color:var(--g)}
-.nutriBody{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:8px}.bodyCard{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fff;text-align:center}.bodyCard .icon{font-size:28px}
+function researchChecks(){
+ const obs=S.planters.flatMap(p=>p.observations||[]),has5=obs.some(o=>o.day>=5),hasSale=S.salesLog.length>0,hasTaste=S.tastes.length>0;
+ return [
+  ['学校・学年・組・名前',!!(S.research.school&&S.research.grade&&S.research.clazz&&(S.research.name||S.name))],
+  ['初期設備と購入金額',equipmentInvestment()>0],['栽培した野菜',S.planters.some(p=>p.crop)||S.salesLog.length>0],
+  ['5日ごとの成長記録',has5],['収穫・販売・月次決算',hasSale],['料理写真・レシピ・感想',hasTaste],
+  ['栄養・理科・創意工夫',!!(S.research.scienceLearning&&S.research.innovation)],['次の挑戦とアプリの感想',!!(S.research.nextCrop&&S.research.appFeeling)]
+ ]
+}
+function researchProgressData(){let c=researchChecks(),done=c.filter(x=>x[1]).length;return {c,done,pct:Math.round(done/c.length*100)}}
+function researchPrompt(title,q,key,value=''){return `<div class="promptCard"><b>${title}</b><p>${q}</p><textarea id="${key}">${value||''}</textarea></div>`}
+function openResearch(){let rp=researchProgressData();show(head('自由研究プロジェクト','その他 ＞ 自由研究')+`<div class="goalBanner"><div class="goalMain">育てる → 工夫する → 売る → 食べる → 学ぶ</div><div class="goalSub">活動のたびに記録すると、提出用レポートが自動で完成します。</div></div><h3>完成度 ${rp.pct}%</h3><div class="researchProgress"><i style="width:${rp.pct}%"></i></div><div class="checklist">${rp.c.map(x=>`<div class="checkitem ${x[1]?'done':''}"><span>${x[1]?'✅':'⬜'}</span><span>${x[0]}</span></div>`).join('')}</div>
+<label>小学校名</label><input id="researchSchool" value="${S.research.school}"><div class="grid2"><div><label>学年</label><input id="researchGrade" value="${S.research.grade}" placeholder="5年"></div><div><label>クラス</label><input id="researchClass" value="${S.research.clazz}" placeholder="1組"></div></div><label>名前</label><input id="studentName" value="${S.research.name||S.name}"><label>研究タイトル</label><input id="researchTitle" value="${S.research.title}">
+${researchPrompt('研究の目的','なぜこの研究をしようと思いましたか？','researchPurpose',S.research.purpose)}
+${researchPrompt('初期投資','そろえた道具の中で、特に必要だと思ったものと理由は？','researchInitialReason',S.research.initialReason)}
+${researchPrompt('理科の学び','光・水・温度・土など、野菜の成長に必要だと分かったことは？','researchScience',S.research.scienceLearning)}
+${researchPrompt('創意工夫','困ったことを、どんな設備や方法で改善しましたか？','researchInnovation',S.research.innovation)}
+${researchPrompt('お金の学び','売上・経費・利益や、設備投資について分かったことは？','researchMoney',S.research.moneyLearning)}
+${researchPrompt('アプリと連動した感想','お父さんが作った専用アプリを使って、ゲーム感覚で栽培とお小遣い稼ぎをした感想は？','researchApp',S.research.appFeeling)}
+${researchPrompt('次の挑戦','次に育てたい野菜と、次の利益目標は？','researchNext',`${S.research.nextCrop||''}${S.research.nextGoal?'\n目標：'+S.research.nextGoal:''}`)}
+<label>最後の感想・考察</label><textarea id="researchComment">${S.research.comment}</textarea><div class="grid2"><button class="btn alt" onclick="saveResearch()">途中保存</button><button class="btn" onclick="previewResearch()">自動レポート確認</button></div>`)}
+function saveResearch(){let next=(researchNext?.value||'').split('\n');S.research={...S.research,school:researchSchool.value.trim(),grade:researchGrade.value.trim(),clazz:researchClass.value.trim(),name:studentName.value.trim(),title:researchTitle.value.trim(),purpose:researchPurpose.value.trim(),initialReason:researchInitialReason.value.trim(),scienceLearning:researchScience.value.trim(),innovation:researchInnovation.value.trim(),moneyLearning:researchMoney.value.trim(),appFeeling:researchApp.value.trim(),nextCrop:(next[0]||'').trim(),nextGoal:next.slice(1).join(' ').replace(/^目標[:：]?/,'').trim(),comment:researchComment.value.trim()};save();closeModal()}
+function equipmentRowsHtml(){return EQ.filter(e=>S.equipment[e.id]?.owned).map(e=>`<tr><td>${e.name}</td><td>${yen(S.equipment[e.id].price)}</td><td>${S.investmentLog.find(x=>x.id===e.id)?.type==='additional'?'追加投資':'初期費用'}</td></tr>`).join('')||'<tr><td colspan="3">未登録</td></tr>'}
+function cropNames(){let ids=[...new Set([...S.planters.filter(p=>p.crop).map(p=>p.crop),...S.salesLog.map(x=>x.cropId)])];return ids.map(id=>crop(id)?.name).filter(Boolean).join('、')||'未登録'}
+function monthlyStatementHtml(){let months=[...new Set(S.salesLog.map(x=>x.date.slice(0,7)))];return months.map(m=>{let r=S.salesLog.filter(x=>x.date.startsWith(m)),sales=r.reduce((a,x)=>a+x.sales,0),cost=r.reduce((a,x)=>a+x.cost,0),profit=r.reduce((a,x)=>a+x.profit,0),repay=r.reduce((a,x)=>a+(x.repayment||0),0);return `<tr><td>${m}</td><td>${yen(sales)}</td><td>${yen(cost)}</td><td>${yen(profit)}</td><td>${yen(profit-repay)}</td></tr>`}).join('')||'<tr><td colspan="5">販売後に自動記入</td></tr>'}
+function observationsHtml(){let rows=S.planters.flatMap(p=>(p.observations||[]).map(o=>({...o,planter:p.id,cropName:p.crop?crop(p.crop)?.name:''}))).sort((a,b)=>a.day-b.day);return rows.map(o=>`<div class="researchChapter"><b>${o.day}日目・${o.cropName||''}（プランター${o.planter}）</b>${o.photoData?`<img class="photoThumb" src="${o.photoData}">`:''}<p>${o.comment}</p></div>`).join('')||'<p>5日ごとの写真とコメントを記録すると自動配置されます。</p>'}
+function tastesHtml(){return S.tastes.map(t=>`<div class="researchChapter"><b>${t.dish||'収穫野菜の料理'}</b>${t.photoData?`<img class="photoThumb" src="${t.photoData}">`:''}<p><b>レシピ：</b>${t.recipe||'未入力'}</p><p><b>食べた感想：</b>${t.comment}</p></div>`).join('')||'<p>料理写真・レシピ・感想を登録すると自動配置されます。</p>'}
+function nutritionReportHtml(){let ids=[...new Set([...S.planters.filter(p=>p.crop).map(p=>p.crop),...S.salesLog.map(x=>x.cropId)])];return ids.map(id=>{let c=crop(id);return `<div class="researchChapter"><b>${c.name}</b>${c.nutrition.map(n=>`<p>${n[0]}：${n[1]}</p>`).join('')}</div>`}).join('')||'<p>栽培野菜に応じて自動記入されます。</p>'}
+function investmentReportHtml(){let f=allForecast();return `<p>初期・追加設備費：${yen(equipmentInvestment())}</p><p>現在の次回利益予測：${yen(f.profit)}</p><p>設備投資の回収目安：${monthsToRecover(f.profit,equipmentInvestment())||'未算定'}収穫サイクル</p><p>追加設備投資では、導入前後の利益予測を比べて、費用を何回の収穫で回収できるか考えました。</p>`}
+function researchDocumentHtml(){return `<div class="researchChapter"><h3>1. 研究の目的</h3><p>${S.research.purpose||'野菜を育てて売り、お小遣いを稼げるか調べました。'}</p></div><div class="researchChapter"><h3>2. 初期費用と栽培計画</h3><table><tr><th>そろえたもの</th><th>金額</th><th>区分</th></tr>${equipmentRowsHtml()}</table><p>合計：${yen(equipmentInvestment())}</p><p>栽培した野菜：${cropNames()}</p><p>${S.research.initialReason}</p></div><div class="researchChapter"><h3>3. 5日ごとの成長記録</h3>${observationsHtml()}</div><div class="researchChapter"><h3>4. 理科の学習と創意工夫</h3><p><b>野菜の成長に必要なこと：</b>${S.research.scienceLearning||'未入力'}</p><p><b>設備や方法による改善：</b>${S.research.innovation||'未入力'}</p><p>光合成では、光・水・二酸化炭素が成長に関係します。LED、反射板、タイマー、自動給水などを使い、環境を安定させました。</p></div><div class="researchChapter"><h3>5. お金を生み出す過程</h3><div class="moneyFlow"><div>初期投資<br><b>${yen(equipmentInvestment())}</b></div><span class="arrow">→</span><div>売上<br><b>${yen(S.sales)}</b></div><span class="arrow">→</span><div>利益<br><b>${yen(S.sales-S.cost)}</b></div></div><table><tr><th>月</th><th>売上</th><th>経費</th><th>利益</th><th>お小遣い</th></tr>${monthlyStatementHtml()}</table><p>${S.research.moneyLearning}</p></div><div class="researchChapter"><h3>6. 追加設備投資と増設</h3>${investmentReportHtml()}</div><div class="researchChapter"><h3>7. 料理・レシピ・感想</h3>${tastesHtml()}</div><div class="researchChapter"><h3>8. 栄養素と働き</h3>${nutritionReportHtml()}</div><div class="researchChapter"><h3>9. アプリと連動した感想</h3><p>${S.research.appFeeling||'未入力'}</p><p>父が作った専用アプリ「農園長者」を使い、ゲーム感覚で栽培、観察、販売、お小遣い計算、自由研究作成を進めました。</p></div><div class="researchChapter"><h3>10. 次の挑戦</h3><p>次に育てたい野菜：${S.research.nextCrop||'未入力'}</p><p>次の利益目標：${S.research.nextGoal||'未入力'}</p><p>${S.research.comment}</p></div>`}
+function previewResearch(){saveResearch();let rp=researchProgressData();show(head('自由研究 自動レポート','その他 ＞ 自由研究 ＞ プレビュー')+`<div class="notice">完成度 ${rp.pct}%　不足項目があってもテスト印刷できます。製品版では提出前チェックを行います。</div><div class="card"><h2>${S.research.title}</h2><p>${S.research.school}　${S.research.grade}　${S.research.clazz}　${S.research.name}</p>${researchDocumentHtml()}</div><div class="grid2"><button class="btn alt" onclick="openResearch()">編集に戻る</button><button class="btn" onclick="printResearch()">印刷する</button></div>`)}
+function printResearch(){let rp=researchProgressData();if(rp.pct<100&&!S.debug&&!confirm(`完成度は${rp.pct}%です。未完成のままテスト印刷しますか？`))return;S.research.completed=rp.pct===100;earnBadge('research1');save();let w=window.open('','_blank');w.document.write(`<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${S.research.title}</title><style>@page{size:A4;margin:14mm}body{font-family:-apple-system,BlinkMacSystemFont,'Yu Gothic',sans-serif;color:#222}h1,h2,h3{color:#1f6b3a}.cover{height:245mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}.chapter{page-break-inside:avoid;border-left:5px solid #5ca65e;padding:8px 12px;margin:12px 0}.photoThumb{width:100%;max-height:95mm;object-fit:contain}.researchChapter{page-break-inside:avoid;border-left:5px solid #5ca65e;padding:8px 12px;margin:12px 0}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #999;padding:6px}.moneyFlow{display:flex;gap:8px;align-items:center}.moneyFlow>div{border:1px solid #999;padding:8px}.pageNo{position:fixed;bottom:3mm;right:5mm;font-size:10px}</style></head><body><section class="cover"><h1>${S.research.title}</h1><h2>育てる・工夫する・売る・食べる・学ぶ</h2><p>${S.research.school}</p><p>${S.research.grade}　${S.research.clazz}</p><p>${S.research.name}</p><p>専用アプリ「農園長者」と連動した自由研究</p></section>${researchDocumentHtml()}<hr><h3>先生からのコメント</h3><div style="height:50mm;border:1px solid #999"></div><p>保護者サイン：____________________</p></body></html>`);w.document.close();w.print()}
 
-</style></head><body>${Array.from({length:pages},(_,i)=>`<div class="page"><h1>${i===0?S.research.title:'記録 '+(i+1)}</h1>${i===0?`<p>名前：${S.research.name}　${S.research.clazz}</p>`:''}<div class="box">${i===0?'研究の目的：本物の野菜を育て、成長・収穫・お金について調べる。':i===pages-1?'感想・考察：'+(S.research.comment||'ここに入力します。'):'成長記録・写真・収穫・収支データを自動配置します。'}</div></div>`).join('')}</body></html>`);w.document.close();w.print()}
+function openDebug(){show(head('テストモード','その他 ＞ テストモード')+`<div class="notice">実機検証専用です。全機能解放、時間経過、収穫・販売・自由研究の一周確認に使います。</div><div class="metric"><span>状態</span><b>${S.debug?'<span class="debugBadge">ON</span>':'OFF'}</b></div><button class="btn wide" onclick="toggleDebug()">${S.debug?'テストモードをOFF':'全機能を開放'}</button><h3>時系列テスト</h3><button class="metric" onclick="debugSetupCrop()"><span>① 設備・プランター・野菜を準備</span><b>実行</b></button><button class="metric" onclick="debugAddGrowth()"><span>② 5日ごとの成長記録を作成</span><b>実行</b></button><button class="metric" onclick="debugReadyHarvest()"><span>③ 収穫可能まで時間を進める</span><b>実行</b></button><button class="metric" onclick="debugSale()"><span>④ 収穫・販売・月次決算データ</span><b>実行</b></button><button class="metric" onclick="debugMeal()"><span>⑤ 料理・レシピ・感想データ</span><b>実行</b></button><button class="btn gold wide" onclick="debugCompleteAll()">一括で全工程のサンプルを作る</button><button class="btn alt wide" style="margin-top:8px" onclick="openResearch()">自由研究レポートを見る</button>`)}
+function toggleDebug(){S.debug=!S.debug;if(S.debug)S.lv=30;save();openDebug()}
+function debugSetupCrop(){S.debug=true;S.lv=30;EQ.forEach((e,i)=>{S.equipment[e.id]={owned:true,installed:true,price:S.equipment[e.id]?.price||[2500,1800,1200,600,4800,1500,500,500,500][i]||500,date:dateOnly()}});S.investmentLog=EQ.map(e=>({id:e.id,name:e.name,date:dateOnly(),price:S.equipment[e.id].price,type:e.required?'initial':'additional'}));while(S.planters.length<8)S.planters.push({id:S.planters.length+1,crop:null,sowDate:null,observations:[],waterEvents:[],harvested:false});let d=new Date();d.setDate(d.getDate()-5);S.planters[0]={...S.planters[0],crop:'baby',sowDate:d.toISOString().slice(0,10),harvested:false};save();alert('設備、8台のプランター、ベビーリーフを準備しました')}
+function debugAddGrowth(){if(!S.planters[0].crop)debugSetupCrop();let p=S.planters[0];p.observations=[5,10,15,20,25].map(day=>({date:new Date(Date.now()-(25-day)*86400000).toISOString().slice(0,10),day,comment:`${day}日目：葉の数や大きさ、色を観察しました。`,photo:false,photoData:''}));save();alert('5日ごとの成長記録を作成しました。写真は実際の撮影時に追加してください。')}
+function debugReadyHarvest(){if(!S.planters[0].crop)debugSetupCrop();let p=S.planters[0],days=parseInt(crop(p.crop).days)+2,d=new Date();d.setDate(d.getDate()-days);p.sowDate=d.toISOString().slice(0,10);save();openPlanter(1)}
+function debugSale(){if(!S.planters[0].crop)debugSetupCrop();let c=crop(S.planters[0].crop),qty=180,sales=S.prices[c.id]*qty/100,cost=65,profit=sales-cost;if(!S.salesLog.some(x=>x.testSample))S.salesLog.push({id:'test-sale',date:dateOnly(),cropId:c.id,cropName:c.name,qty,unitPrice:S.prices[c.id],sales,cost,profit,repayment:0,testSample:true});S.sales=S.salesLog.reduce((a,x)=>a+x.sales,0);S.cost=S.salesLog.reduce((a,x)=>a+x.cost,0);S.planters[0].harvested=true;save();alert('収穫・販売・月次決算のサンプルを作成しました')}
+function debugMeal(){if(!S.tastes.some(x=>x.testSample))S.tastes.push({date:dateOnly(),dish:'ベビーリーフと卵のサラダ',recipe:'材料：ベビーリーフ、ゆで卵、トマト、ドレッシング。野菜を洗い、食べやすく盛り付けます。',comment:'自分で育てたので、いつもよりおいしく感じました。',photo:false,photoData:'',testSample:true});save();alert('料理・レシピ・感想のサンプルを作成しました')}
+function debugCompleteAll(){debugSetupCrop();debugAddGrowth();debugSale();debugMeal();S.research={...S.research,school:'テスト小学校',grade:'5年',clazz:'1組',name:S.name||'テスト太郎',purpose:'野菜を育てて売ると、どのくらいお小遣いを稼げるのか調べるためです。',initialReason:'植物を安定して育てるために、プランター、土、種、LED、タイマーなどをそろえました。',scienceLearning:'植物には光、水、空気、適切な温度が必要で、光合成によって成長することを学びました。',innovation:'光が均等に当たるよう反射板を付け、水やり忘れを減らすため自動給水を使いました。',moneyLearning:'売上から経費を引いたものが利益で、利益がお小遣いになります。設備投資は利益増加分で何回の収穫で回収できるか考えました。',appFeeling:'父が作ったアプリで次にやることが分かり、ゲームのようにレベルを上げながら記録できて楽しかったです。',nextCrop:'バジル',nextGoal:'次回利益1,000円',comment:'次はプランターを増やし、どの設備が最も利益改善に役立つか比べたいです。'};save();openResearch()}
+
 function openParent(){show(head('親モード','その他 ＞ 親モード')+`<label>親PIN</label><input id="parentPin" type="password" inputmode="numeric" placeholder="初期PIN 1234"><button class="btn wide" onclick="parentLogin()">開く</button>`)}
 function parentLogin(){if(parentPin.value!=='1234')return alert('PINが違います');show(head('親ダッシュボード','その他 ＞ 親モード')+`<div class="notice">試作PINです。正式版では変更・生体認証へ対応します。</div><button class="metric" onclick="openParentPrices()"><span>買取価格</span><b>設定</b></button><button class="metric" onclick="openManagement('loan')"><span>親ローン</span><b>${yen(S.loan)}</b></button><button class="metric" onclick="openManagement('equipment')"><span>設備投資</span><b>${yen(equipmentInvestment())}</b></button>`)}
 function openParentPrices(){show(head('買取価格','親モード ＞ 買取価格')+CROPS.map(c=>`<label>${c.name}（円/100g）</label><input type="number" value="${S.prices[c.id]}" onchange="S.prices['${c.id}']=+this.value;save()">`).join(''))}
@@ -502,15 +508,16 @@ function chooseCrop(id,cid){let p=S.planters.find(x=>x.id===id);p.crop=cid;show(
 function confirmSow(id){let p=S.planters.find(x=>x.id===id);p.sowDate=dateOnly();p.observations=[];p.waterEvents=[];S.xp+=20;gainPoints(10,'種まき');earnBadge('firstSow');levelCheck();save();closeModal();alert('0%からスタートしました。')}
 function timelineHtml(p){return p.observations.length?`<div class="timeline">${p.observations.slice().reverse().map(o=>`<div class="day"><strong>${o.day}日目（${o.date}）</strong><div>${o.comment}</div>${o.photo?'📷 写真あり':''}</div>`).join('')}</div>`:'<p class="muted">まだ記録がありません。</p>'}
 function observation(id){let p=S.planters.find(x=>x.id===id),day=daysSince(p.sowDate)+1,old=p.observations.find(o=>o.date===dateOnly());show(head('成長記録・'+day+'日目',`農園 ＞ プランター${id} ＞ 成長記録`)+`${old?'<div class="notice">今日は記録済みです。更新できます。</div>':''}<label>観察したこと</label><textarea id="obsText">${old?.comment||''}</textarea><label>写真（任意）</label><input id="obsPhoto" type="file" accept="image/*"><button class="btn wide" onclick="saveObservation(${id})">保存</button><p class="muted">成長率は実際の日数に連動し、このボタンでは増えません。</p>`)}
-function saveObservation(id){let p=S.planters.find(x=>x.id===id),text=obsText.value.trim();if(!text)return alert('観察内容を入力してください');let old=p.observations.find(o=>o.date===dateOnly()),photo=obsPhoto.files.length>0;if(old){old.comment=text;old.photo=old.photo||photo}else{p.observations.push({date:dateOnly(),day:daysSince(p.sowDate)+1,comment:text,photo});gainPoints(photo?15:10,'観察記録')}S.research.comment+=(S.research.comment?'\n':'')+`${daysSince(p.sowDate)+1}日目：${text}`;earnBadge('firstObs');save();openPlanter(id)}
+function fileData(file){return new Promise((resolve,reject)=>{if(!file)return resolve('');let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+async function saveObservation(id){let p=S.planters.find(x=>x.id===id),text=obsText.value.trim();if(!text)return alert('観察内容を入力してください');let file=obsPhoto.files[0],photoData=await fileData(file),old=p.observations.find(o=>o.date===dateOnly()),photo=!!file;if(old){old.comment=text;old.photo=old.photo||photo;old.photoData=photoData||old.photoData}else{p.observations.push({date:dateOnly(),day:daysSince(p.sowDate)+1,comment:text,photo,photoData});gainPoints(photo?15:10,'観察記録')}S.research.comment+=(S.research.comment?'\n':'')+`${daysSince(p.sowDate)+1}日目：${text}`;earnBadge('firstObs');save();openPlanter(id)}
 function water(id){let p=S.planters.find(x=>x.id===id);if(p.waterEvents.includes(dateOnly()))return alert('今日は記録済みです');p.waterEvents.push(dateOnly());S.xp+=3;gainPoints(2,'水やり記録');levelCheck();save();openPlanter(id)}
 function recordAllWater(){let n=0;S.planters.filter(p=>p.crop).forEach(p=>{if(!p.waterEvents.includes(dateOnly())){p.waterEvents.push(dateOnly());n++}});if(!n)return alert('今日は記録済みです');S.xp+=3;gainPoints(2,'まとめて水やり');levelCheck();save();alert(n+'台を記録しました')}
 function harvest(id){let p=S.planters.find(x=>x.id===id),c=crop(p.crop);p.harvested=true;earnBadge('firstHarvest');S.xp+=80;gainPoints(20,'収穫');levelCheck();show(head('収穫できました！',`農園 ＞ プランター${id} ＞ 収穫`)+`<div class="bigveg">${c.icon}</div><label>実際の収穫量（g）</label><input id="harvestQty" type="number" value="150"><div class="grid2"><button class="btn gold" onclick="sellHarvest(${id})">売る</button><button class="btn" onclick="tasteHarvest(${id})">食べてみた</button></div>`);save()}
 function sellHarvest(id){let p=S.planters.find(x=>x.id===id),c=crop(p.crop),qty=+harvestQty.value,sales=S.prices[c.id]*qty/100,cost=30,profit=sales-cost;show(head('親へ売却申請','農園 ＞ 収穫 ＞ 売却')+`<div class="metric"><span>売上</span><b>${yen(sales)}</b></div><div class="metric"><span>原価（仮）</span><b>${yen(cost)}</b></div><div class="metric"><span>利益</span><b>${yen(profit)}</b></div><label>利益から返済する割合</label><input id="rate" type="range" min="0" max="100" value="${S.repayRate}" oninput="rateVal.textContent=this.value+'%'"><div id="rateVal">${S.repayRate}%</div><button class="btn wide" onclick="approveSale(${id},${qty},${sales},${cost},${profit})">親が承認する（試作）</button>`)}
-function approveSale(id,qty,sales,cost,profit){let p=S.planters.find(x=>x.id===id),c=crop(p.crop),rate=+document.getElementById('rate').value,repayment=Math.min(S.loan,profit*rate/100);S.repayRate=rate;S.loan-=repayment;S.sales+=sales;S.cost+=cost;S.salesLog.push({id:crypto.randomUUID?crypto.randomUUID():Date.now().toString(),date:dateOnly(),cropId:c.id,cropName:c.name,qty,unitPrice:S.prices[c.id],sales,cost,profit,repayment});gainPoints(25,'売却成立');earnBadge('firstSale');S.xp+=20;levelCheck();save();show(head('精算完了','農園 ＞ 売却 ＞ 精算')+`<div class="metric"><span>利益</span><b>${yen(profit)}</b></div><div class="metric"><span>返済割合</span><b>${rate}%</b></div><div class="metric"><span>ローン返済</span><b>${yen(repayment)}</b></div><div class="metric"><span>残る利益</span><b>${yen(profit-repayment)}</b></div><button class="btn wide" onclick="closeModal();openManagement('flow')">お金の流れを見る</button>`)}
-function tasteHarvest(id){show(head('食べてみた','農園 ＞ 収穫 ＞ 食べてみた')+`<label>感想（必須）</label><textarea id="tasteText"></textarea><label>写真（任意）</label><input id="tastePhoto" type="file" accept="image/*"><button class="btn wide" onclick="saveTaste()">保存</button>`)}
-function saveTaste(){let t=tasteText.value.trim();if(!t)return alert('感想を入力してください');let photo=tastePhoto.files.length>0;S.tastes.push({date:dateOnly(),comment:t,photo});gainPoints(photo?20:10,'食べてみた');earnBadge('eat1');S.research.comment+=(S.research.comment?'\n':'')+'食べた感想：'+t;save();closeModal()}
-function saveEquipment(){EQ.forEach(e=>{let x=S.equipment[e.id],owned=document.getElementById('eq_'+e.id).checked,price=+document.getElementById('price_'+e.id).value||0,was=x.owned;x.owned=owned;x.installed=owned;x.price=price;if(owned&&!was&&price>0)earnBadge('invest1')});save();alert(equipmentReady()?'必要設備が揃いました！':'未確認の必要設備があります。')}
+function approveSale(id,qty,sales,cost,profit){let p=S.planters.find(x=>x.id===id),c=crop(p.crop),rate=+document.getElementById('rate').value,repayment=Math.min(S.loan,profit*rate/100);S.repayRate=rate;S.loan-=repayment;S.sales+=sales;S.cost+=cost;S.salesLog.push({id:crypto.randomUUID?crypto.randomUUID():Date.now().toString(),date:dateOnly(),cropId:c.id,cropName:c.name,qty,unitPrice:S.prices[c.id],sales,cost,profit,repayment});gainPoints(25,'売却成立');earnBadge('firstSale');S.xp+=20;levelCheck();save();show(head('精算完了','農園 ＞ 売却 ＞ 精算')+`<div class="metric"><span>利益</span><b>${yen(profit)}</b></div><div class="metric"><span>返済割合</span><b>${rate}%</b></div><div class="metric"><span>ローン返済</span><b>${yen(repayment)}</b></div><div class="metric"><span>残る利益</span><b>${yen(profit-repayment)}</b></div><div class="promptCard"><b>自由研究コメント</b><p>売上から経費を引いて利益を計算して、どんなことに気付きましたか？ 自由研究画面で記録しよう。</p></div><button class="btn wide" onclick="closeModal();openManagement('flow')">お金の流れを見る</button><button class="btn alt wide" style="margin-top:8px" onclick="openResearch()">自由研究にコメントする</button>`)}
+function tasteHarvest(id){show(head('食べてみた','農園 ＞ 収穫 ＞ 食べてみた')+`<label>料理名</label><input id="tasteDish" placeholder="例：ベビーリーフのサラダ"><label>レシピ・作り方</label><textarea id="tasteRecipe" placeholder="材料と作り方"></textarea><label>食べた感想（必須）</label><textarea id="tasteText"></textarea><label>料理の写真（推奨）</label><input id="tastePhoto" type="file" accept="image/*"><button class="btn wide" onclick="saveTaste()">保存</button>`)}
+async function saveTaste(){let t=tasteText.value.trim();if(!t)return alert('感想を入力してください');let file=tastePhoto.files[0],photoData=await fileData(file),photo=!!file;S.tastes.push({date:dateOnly(),dish:tasteDish.value.trim(),recipe:tasteRecipe.value.trim(),comment:t,photo,photoData});gainPoints(photo?20:10,'食べてみた');earnBadge('eat1');S.research.comment+=(S.research.comment?'\n':'')+'食べた感想：'+t;save();closeModal()}
+function saveEquipment(){EQ.forEach(e=>{let x=S.equipment[e.id],owned=document.getElementById('eq_'+e.id).checked,price=+document.getElementById('price_'+e.id).value||0,was=x.owned;x.owned=owned;x.installed=owned;x.price=price;if(owned&&!was){let type=S.planters.some(p=>p.sowDate)?'additional':'initial';S.investmentLog.push({id:e.id,name:e.name,date:dateOnly(),price,type});if(price>0)earnBadge('invest1')}});save();alert(equipmentReady()?'必要設備が揃いました！':'未確認の必要設備があります。')}
 function levelCheck(){while(S.xp>=100&&S.lv<30){S.xp-=100;S.lv++;gainPoints(30,'レベルアップ');alert('Farm Lv.'+S.lv+'にアップ！')}}
 
 function renderAvatar(){
@@ -533,7 +540,7 @@ function renderDress(cat){
  let arr=cat==='hat'?HATS:cat==='top'?TOPS:cat==='pants'?PANTS:cat==='shoe'?SHOES:cat==='accessory'?ACCESSORIES:cat==='fun'?FUN:S.savedCoords;
  let key=cat==='saved'?null:cat;
  dressItems.innerHTML=arr.map((x,i)=>{
-   let locked=cat!=='saved'&&i>S.lv;
+   let locked=!S.debug&&cat!=='saved'&&i>S.lv;
    let on=key&&S.outfitDraft[key]===x;
    let label=x||'なし';
    let visual=(cat==='top'||cat==='pants'||cat==='shoe')?`<span style="display:block;width:38px;height:38px;border-radius:10px;background:${x};margin:auto"></span>`:(cat==='saved'?(x.hat+x.accessory+x.fun||'コーデ'):label);
