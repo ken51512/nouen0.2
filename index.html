@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="農園長者">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>農園長者 v0.6 RCテスト</title>
+<title>農園長者 v0.7 完成版MVPテスト</title>
 <style>
 :root{--g:#1f6b3a;--g2:#2f8c50;--pale:#f4f7ee;--card:#fff;--gold:#f2b337;--orange:#ee7c23;--ink:#243126;--muted:#748076;--line:#dfe8d8;--red:#c84c3c;--blue:#3978b4;--purple:#7a59a8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -109,7 +109,7 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px
 </head>
 <body>
 <div class="app">
-<header>
+<header><div style="position:absolute;right:8px;top:6px;font-size:10px;background:#fff3;border:1px solid #ffffff55;border-radius:999px;padding:3px 7px">v0.7 TEST</div>
  <div class="head">
   <img src="icon-192.png">
   <div><div class="title">農園長者</div><div class="tag">本物の野菜を育て、自分の努力でお小遣いを増やそう</div></div>
@@ -626,6 +626,17 @@ function missionAdjustedPct(p){let base=stageFor(p).pct;if(!p.crop||!p.sowDate)r
 function openFAQ(){show(head('困ったときは？','その他 ＞ 困ったときは？')+`<div class="recipeCard"><h3>通知が来ない</h3><p>端末の設定で農園長者の通知を許可してください。現在：<b>${S.notificationPermission}</b></p><button class="btn alt" onclick="requestNotifications()">通知を許可する</button></div><div class="recipeCard"><h3>収穫ボタンが押せない</h3><p>収穫時期になるか、テストモードで時間を進めると表示されます。収穫写真が必要です。</p></div><div class="recipeCard"><h3>親に売るボタンが押せない</h3><p>先に「収穫ボタン」で写真と収穫量を登録してください。</p></div><div class="recipeCard"><h3>利益が少ない</h3><p>経営タブの「もっとお小遣いを増やすためには？」で、プランター追加や設備投資を比較してください。</p></div><div class="recipeCard"><h3>自由研究が完成しない</h3><p>5日ごとの写真、売上・経費・利益、料理写真と感想、栄養、次の目標を確認してください。</p></div>`)}
 function saveUtilityCost(){S.utilityCost.electric=+electricCost.value||0;S.utilityCost.water=+waterCost.value||0;save();alert('ランニングコストを保存しました')}
 
-render();onboarding();if(S.onboardDone&&!S.guideDone)setTimeout(startGuide,300);if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+render();onboarding();if(S.onboardDone&&!S.guideDone)setTimeout(startGuide,300);
+if('serviceWorker' in navigator){
+ window.addEventListener('load',async()=>{
+  try{
+   const reg=await navigator.serviceWorker.register('./sw.js?v=07');
+   await reg.update();
+   if(reg.waiting){reg.waiting.postMessage({type:'SKIP_WAITING'})}
+   navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('v07reloaded')){sessionStorage.setItem('v07reloaded','1');location.reload()}})
+  }catch(e){console.warn('SW registration failed',e)}
+ })
+}
+
 </script>
 </body></html>
