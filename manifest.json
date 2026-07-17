@@ -3,9 +3,8 @@
   "short_name": "農園長者",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f4f7ef",
-  "theme_color": "#1f6b3a",
-  "description": "野菜栽培・経営・理科・食育を一つの自由研究に自動編集する教育アプリ",
+  "background_color": "#f4f7ee",
+  "theme_color": "#1F6B3A",
   "icons": [
     {
       "src": "icon-192.png",
