@@ -309,7 +309,7 @@ function normalizeState(){
 }
 normalizeState();
 
-function save(){
+function save(){try{
     try{
         localStorage.setItem(KEY,JSON.stringify(S));
     }catch(e){
