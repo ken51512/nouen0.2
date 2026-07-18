@@ -107,18 +107,6 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px
 .notifDot{display:inline-flex;min-width:22px;height:22px;align-items:center;justify-content:center;border-radius:999px;background:var(--red);color:white;font-size:11px;font-weight:900}.missionDue{border:2px solid var(--gold);background:#fff9df}.recipeCard{border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0;background:#fff}.lockedAction{opacity:.45}.photoProof{max-width:100%;border-radius:14px;margin:8px 0}.sectionPrint{break-inside:avoid;margin-bottom:18px}@media print{header,.bottom,.btn,.back{display:none!important}.app{max-width:none;padding:0}.page{display:block!important}.card{box-shadow:none;border:1px solid #bbb}}
 </style>
 
-<!-- Step5 character base -->
-<script>
-window.characterState=JSON.parse(localStorage.getItem('characterState')||'{"gender":"boy","hat":"straw","top":"tshirt","bottom":"denim","shoes":"sneaker"}');
-window.saveCharacterState=function(){localStorage.setItem('characterState',JSON.stringify(window.characterState));};
-</script>
-
-<style id="chatgpt-character-demo">
-.character,.player-character,.avatar,canvas{
-filter: drop-shadow(0 4px 8px rgba(0,0,0,.25));
-}
-</style>
-
 </head>
 <body>
 <div class="app">
@@ -506,11 +494,6 @@ function researchDocumentHtml(){return `<div class="researchChapter"><h3>1. 研�
 function previewResearch(){saveResearch();let rp=researchProgressData();show(head('自由研究 自動レポート','その他 ＞ 自由研究 ＞ プレビュー')+`<div class="notice">完成度 ${rp.pct}%　不足項目があってもテスト印刷できます。製品版では提出前チェックを行います。</div><div class="card"><h2>${S.research.title}</h2><p>${S.research.school}　${S.research.grade}　${S.research.clazz}　${S.research.name}</p>${researchDocumentHtml()}</div><div class="grid2"><button class="btn alt" onclick="openResearch()">編集に戻る</button><button class="btn" onclick="printResearch()">印刷する</button></div>`)}
 function printResearch(){let rp=researchProgressData();if(rp.pct<100&&!S.debug&&!confirm(`完成度は${rp.pct}%です。未完成のままテスト印刷しますか？`))return;S.research.completed=rp.pct===100;earnBadge('research1');save();let w=window.open('','_blank');w.document.write(`<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${S.research.title}</title><style>@page{size:A4;margin:14mm}body{font-family:-apple-system,BlinkMacSystemFont,'Yu Gothic',sans-serif;color:#222}h1,h2,h3{color:#1f6b3a}.cover{height:245mm;display:flex;flex-direction:column;justify-content:center;text-align:center;page-break-after:always}.chapter{page-break-inside:avoid;border-left:5px solid #5ca65e;padding:8px 12px;margin:12px 0}.photoThumb{width:100%;max-height:95mm;object-fit:contain}.researchChapter{page-break-inside:avoid;border-left:5px solid #5ca65e;padding:8px 12px;margin:12px 0}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #999;padding:6px}.moneyFlow{display:flex;gap:8px;align-items:center}.moneyFlow>div{border:1px solid #999;padding:8px}.pageNo{position:fixed;bottom:3mm;right:5mm;font-size:10px}.notifDot{display:inline-flex;min-width:22px;height:22px;align-items:center;justify-content:center;border-radius:999px;background:var(--red);color:white;font-size:11px;font-weight:900}.missionDue{border:2px solid var(--gold);background:#fff9df}.recipeCard{border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0;background:#fff}.lockedAction{opacity:.45}.photoProof{max-width:100%;border-radius:14px;margin:8px 0}.sectionPrint{break-inside:avoid;margin-bottom:18px}@media print{header,.bottom,.btn,.back{display:none!important}.app{max-width:none;padding:0}.page{display:block!important}.card{box-shadow:none;border:1px solid #bbb}}
 </style>
-<!-- Step5 character base -->
-<script>
-window.characterState=JSON.parse(localStorage.getItem('characterState')||'{"gender":"boy","hat":"straw","top":"tshirt","bottom":"denim","shoes":"sneaker"}');
-window.saveCharacterState=function(){localStorage.setItem('characterState',JSON.stringify(window.characterState));};
-</script>
 </head><body><section class="cover"><h1>${S.research.title}</h1><h2>育てる・工夫する・売る・食べる・学ぶ</h2><p>${S.research.school}</p><p>${S.research.grade}　${S.research.clazz}</p><p>${S.research.name}</p><p>専用アプリ「農園長者」と連動した自由研究</p></section>${researchDocumentHtml()}<hr><h3>先生からのコメント</h3><div style="height:50mm;border:1px solid #999"></div><p>保護者サイン：____________________</p>
 
 <div style="margin:16px;padding:16px;border:2px solid #7bbf5e;border-radius:16px;background:#fff8e8">
