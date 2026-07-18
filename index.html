@@ -309,7 +309,17 @@ function normalizeState(){
 }
 normalizeState();
 
+function normalizeState(){
+    if(!S.planters) S.planters=[];
+    while(S.planters.length<8){
+        S.planters.push({cropId:null,sownAt:null,stage:0});
+    }
+    if(S.planters.length>8){
+        S.planters=S.planters.slice(0,8);
+    }
+}
 function save(){
+    normalizeState();
     try{
         localStorage.setItem(KEY,JSON.stringify(S));
     }catch(e){
