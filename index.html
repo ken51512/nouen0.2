@@ -314,8 +314,6 @@ function save(){
         localStorage.setItem(KEY,JSON.stringify(S));
     }catch(e){
         console.error('Save failed',e);
-        alert('保存に失敗しました。ブラウザの保存容量をご確認ください。');
-        return;
     }
     render();
 }
