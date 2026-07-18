@@ -312,7 +312,7 @@ normalizeState();
 function normalizeState(){
     if(!S.planters) S.planters=[];
     while(S.planters.length<8){
-        S.planters.push({cropId:null,sownAt:null,stage:0});
+        S.planters.push({id:S.planters.length+1,crop:null,sowDate:null,observations:[],waterEvents:[],harvested:false,harvestPhotoData:'',harvestQty:0,harvestDate:'',sold:false});
     }
     if(S.planters.length>8){
         S.planters=S.planters.slice(0,8);
