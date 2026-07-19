@@ -289,7 +289,7 @@ const EQUIPMENT_EFFECT={
  reflectBack:{yieldRate:0.02,costMonthly:0,label:'背面反射（仮）'}
 };
 function fresh(){return {
- version:'0.7.1',onboardDone:false,onboardStep:0,guideDone:false,guideStep:0,name:'',gender:'boy',avatar:'👦',
+ version:'0.7.1',onboardDone:false,onboardStep:0,guideDone:false,guideStep:0,name:'',gender:'boy',avatarLayers:{gender:'boy',hair:'short1',face:'smile',hat:'none',top:'green',pants:'blue',shoes:'brown'},avatar:'🧑',
  outfitSaved:{hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:''},outfitDraft:{hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:''},savedCoords:[],
  lv:1,xp:0,points:0,pointLog:[],sales:0,cost:0,loan:0,repayRate:30,
  equipment:Object.fromEntries(EQ.map(e=>[e.id,{owned:false,price:0,installed:false,date:null}])),
@@ -500,7 +500,7 @@ function printResearch(){let rp=researchProgressData();if(rp.pct<100&&!S.debug&&
 <h2>👕 着せ替え（β）</h2>
 <p>男の子 / 女の子（実装予定）</p>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<button>👦 男の子</button><button>👧 女の子</button>
+<button>🧑 男の子</button><button>👧 女の子</button>
 <button>👒 帽子</button><button>👕 服</button><button>👖 ズボン</button><button>👟 靴</button>
 </div>
 <p style="color:#666">※正式な着せ替えシステムは次版で実装します。</p>
@@ -620,7 +620,7 @@ function onboarding(){if(S.onboardDone)return;onboard.classList.add('show');rend
 function renderOnboarding(){let n=S.onboardStep||0,screens=[
 `<div class="dots">● ○ ○ ○ ○ ○</div><h1>農園長者を目指そう！</h1><div class="panel"><div style="font-size:70px;text-align:center">🌱💰🏆</div><div class="goalBanner"><div class="goalMain">売上と利益を増やして<br>自分のお小遣いを増やそう！</div><div class="goalSub">本物の野菜を育てる努力が、農園レベルとお金の学びにつながります。</div></div><p>このあと、実際のホーム画面を見ながら、ポップアップで一つずつ使い方を確認します。</p></div><button class="btn gold wide" onclick="S.onboardStep=1;save();renderOnboarding()">目標を確認して始める</button>`,
 `<div class="dots">○ ● ○ ○ ○ ○</div><h1>社長のお名前を教えてね</h1><div class="panel"><input id="onName" maxlength="12" value="${S.name}" placeholder="例：やまと"></div><button class="btn gold wide" onclick="onNameNext()">次へ</button>`,
-`<div class="dots">○ ○ ● ○ ○ ○</div><h1>キャラクターを作ろう</h1><div class="panel"><div class="grid2"><button class="choice ${S.gender==='boy'?'on':''}" onclick="S.gender='boy';S.avatar='👦';save();renderOnboarding()"><div class="big">👦</div>男の子</button><button class="choice ${S.gender==='girl'?'on':''}" onclick="S.gender='girl';S.avatar='👧';save();renderOnboarding()"><div class="big">👧</div>女の子</button></div></div><button class="btn gold wide" onclick="S.onboardStep=3;save();renderOnboarding()">次へ</button>`,
+`<div class="dots">○ ○ ● ○ ○ ○</div><h1>キャラクターを作ろう</h1><div class="panel"><div class="grid2"><button class="choice ${S.gender==='boy'?'on':''}" onclick="S.gender='boy';S.avatar='🧑';save();renderOnboarding()"><div class="big">🧑</div>男の子</button><button class="choice ${S.gender==='girl'?'on':''}" onclick="S.gender='girl';S.avatar='👧';save();renderOnboarding()"><div class="big">👧</div>女の子</button></div></div><button class="btn gold wide" onclick="S.onboardStep=3;save();renderOnboarding()">次へ</button>`,
 `<div class="dots">○ ○ ○ ● ○ ○</div><h1>本物の設備を確認</h1><div class="panel">${EQ.filter(e=>e.required).map(e=>`<label class="checkrow"><input type="checkbox" id="onEq_${e.id}" ${S.equipment[e.id].owned?'checked':''}><span class="equipmentIcon">${e.icon}</span><span><strong>${e.name}</strong><span class="muted">実際に用意できていたらチェック</span></span></label>`).join('')}</div><button class="btn gold wide" onclick="onEquipmentNext()">保存</button><button class="btn alt wide" style="margin-top:8px" onclick="S.onboardStep=4;save();renderOnboarding()">あとで確認</button>`,
 `<div class="dots">○ ○ ○ ○ ● ○</div><h1>最初の野菜</h1><div class="panel"><div style="font-size:75px;text-align:center">🥬</div><h2 style="text-align:center">ベビーリーフ</h2><p>初めてでも育てやすく、約20〜30日で収穫を目指せます。</p></div><button class="btn gold wide" onclick="S.onboardStep=5;save();renderOnboarding()">次へ</button>`,
 `<div class="dots">○ ○ ○ ○ ○ ●</div><h1>進め方</h1><div class="panel"><ol><li>設備を準備</li><li>野菜を選ぶ</li><li>種をまく</li><li>毎日観察</li><li>収穫して親に売る</li><li>売上・利益を確認</li><li>農園レベルアップ</li><li>自由研究完成</li></ol></div><button class="btn gold wide" onclick="S.onboardStep=6;save();renderOnboarding()">通知を設定する</button>`,
@@ -700,7 +700,7 @@ if('serviceWorker' in navigator){
 <h2>👕 着せ替え（β）</h2>
 <p>男の子 / 女の子（実装予定）</p>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<button>👦 男の子</button><button>👧 女の子</button>
+<button>🧑 男の子</button><button>👧 女の子</button>
 <button>👒 帽子</button><button>👕 服</button><button>👖 ズボン</button><button>👟 靴</button>
 </div>
 <p style="color:#666">※正式な着せ替えシステムは次版で実装します。</p>
