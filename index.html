@@ -586,15 +586,33 @@ function levelCheck(){while(S.xp>=100&&S.lv<30){S.xp-=100;S.lv++;gainPoints(30,'
 function renderAvatar(){
  if(!document.getElementById('avatarCanvas'))return;
  const d=S.outfitDraft;
- avatarCanvas.style.setProperty('--skin',S.gender==='girl'?'#e7b58d':'#dfaa80');
+ const skin=S.gender==='girl'?'#e7b58d':'#dfaa80',hair=S.gender==='girl'?'#3f291f':'#49311f';
+ const set=(selector,style)=>Object.assign(avatarCanvas.querySelector(selector).style,style);
+ Object.assign(avatarCanvas.style,{filter:'drop-shadow(0 8px 4px #24472c30)'});
+ avatarCanvas.style.setProperty('--skin',skin);
  avatarCanvas.style.setProperty('--top',d.top||'#4b9d55');
  avatarCanvas.style.setProperty('--pants',d.pants||'#315b82');
  avatarCanvas.style.setProperty('--shoe',d.shoe||'#5b3a24');
+ set('.hairBack',{left:'39px',top:'22px',width:'112px',height:'111px',background:hair,border:'3px solid #3d332d',borderRadius:'56px 56px 40px 40px',boxShadow:'inset -6px -6px 0 #0002',zIndex:'1'});
+ set('.headPart',{left:'45px',top:'27px',width:'100px',height:'94px',background:skin,border:'3px solid #3d332d',borderRadius:'50% 50% 47% 47%',boxShadow:'inset -6px -5px 0 #0001',zIndex:'3'});
+ set('.hairFront',{left:'42px',top:'21px',width:'106px',height:'50px',background:hair,border:'3px solid #3d332d',borderRadius:'56px 56px 20px 20px',boxShadow:'inset -6px -5px 0 #0002',zIndex:'4'});
+ set('.eye.l',{left:'66px',top:'75px',width:'11px',height:'14px',border:'2px solid #fff',boxShadow:'0 0 0 1px #2a211c,inset 0 -3px 0 #0002',zIndex:'5'});
+ set('.eye.r',{left:'113px',top:'75px',width:'11px',height:'14px',border:'2px solid #fff',boxShadow:'0 0 0 1px #2a211c,inset 0 -3px 0 #0002',zIndex:'5'});
+ set('.smile',{left:'83px',top:'101px',width:'24px',height:'11px',background:'#ad5951',border:'2px solid #713b38',borderTop:'0',borderRadius:'3px 3px 16px 16px',boxShadow:'inset 0 -3px 0 #7f3e3a55',zIndex:'5'});
+ set('.neck',{left:'84px',top:'119px',width:'22px',height:'13px',background:skin,border:'3px solid #3d332d',borderRadius:'0 0 8px 8px',zIndex:'2'});
+ set('.torso',{left:'51px',top:'127px',width:'88px',height:'57px',border:'3px solid #3d332d',borderRadius:'24px 24px 15px 15px',boxShadow:'inset -6px -5px 0 #0001',zIndex:'3'});
+ set('.arm.l',{left:'27px',top:'132px',width:'30px',height:'59px',background:skin,border:'3px solid #3d332d',borderRadius:'18px 18px 20px 20px',boxShadow:'inset -4px -4px 0 #0001',transform:'rotate(9deg)',zIndex:'2'});
+ set('.arm.r',{right:'27px',top:'132px',width:'30px',height:'59px',background:skin,border:'3px solid #3d332d',borderRadius:'18px 18px 20px 20px',boxShadow:'inset -4px -4px 0 #0001',transform:'rotate(-9deg)',zIndex:'2'});
+ set('.pants',{left:'55px',top:'175px',width:'80px',height:'38px',border:'3px solid #3d332d',borderRadius:'10px 10px 15px 15px',boxShadow:'inset -5px -5px 0 #0001',zIndex:'4'});
+ set('.leg.l',{left:'61px',top:'203px',width:'29px',height:'40px',border:'3px solid #3d332d',borderRadius:'0 0 13px 13px',zIndex:'3'});
+ set('.leg.r',{left:'100px',top:'203px',width:'29px',height:'40px',border:'3px solid #3d332d',borderRadius:'0 0 13px 13px',zIndex:'3'});
+ set('.shoe.l',{left:'49px',top:'233px',width:'44px',height:'29px',border:'3px solid #3d332d',borderRadius:'22px 22px 13px 13px',boxShadow:'inset -4px -4px 0 #0002',zIndex:'5'});
+ set('.shoe.r',{left:'97px',top:'233px',width:'44px',height:'29px',border:'3px solid #3d332d',borderRadius:'22px 22px 13px 13px',boxShadow:'inset -4px -4px 0 #0002',zIndex:'5'});
+ set('.hatLayer',{top:'-7px',fontSize:'80px'});set('.accessoryLayer',{right:'9px',top:'118px',fontSize:'44px'});set('.funLayer',{top:'108px',fontSize:'102px'});
  avatarHat.textContent=d.hat||'';
  avatarAccessory.textContent=d.accessory||'';
  avatarFun.textContent=d.fun||'';
  avatarNamePlate.textContent=S.name||'なまえ';
- document.querySelectorAll('.avatarCanvas .hairBack,.avatarCanvas .hairFront').forEach(e=>e.style.background=S.gender==='girl'?'#3f291f':'#49311f');
 }
 
 function dressCategory(cat,btn){window.currentDressCategory=cat;document.querySelectorAll('#dressTabs .tab').forEach(x=>x.classList.remove('on'));btn?.classList.add('on');renderDress(cat)}
