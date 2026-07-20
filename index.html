@@ -70,13 +70,14 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px
 .avatarCanvas .headPart{position:absolute;left:67px;top:35px;width:56px;height:62px;border-radius:48% 48% 44% 44%;background:var(--skin,#e5b188);z-index:3}
 .avatarCanvas .hairFront{position:absolute;left:64px;top:27px;width:64px;height:31px;background:#49311f;border-radius:35px 35px 15px 15px;z-index:4}
 .avatarCanvas .eye{position:absolute;top:61px;width:5px;height:7px;background:#2a211c;border-radius:50%;z-index:5}
+.avatarCanvas .eye::after{content:"";position:absolute;left:2px;top:2px;width:4px;height:4px;background:#fff;border-radius:50%;box-shadow:5px 7px 0 -1px #6f4b3b}
 .avatarCanvas .eye.l{left:82px}.avatarCanvas .eye.r{left:107px}
 .avatarCanvas .smile{position:absolute;left:91px;top:78px;width:16px;height:8px;border-bottom:3px solid #9c4d45;border-radius:0 0 18px 18px;z-index:5}
 .avatarCanvas .neck{position:absolute;left:88px;top:91px;width:20px;height:18px;background:var(--skin,#e5b188);z-index:2}
 .avatarCanvas .torso{position:absolute;left:57px;top:103px;width:82px;height:82px;background:var(--top,#4b9d55);border-radius:20px 20px 12px 12px;z-index:3}
 .avatarCanvas .innerLayer,.avatarCanvas .outerLayer,.avatarCanvas .hand{position:absolute}
-.avatarCanvas .outerLayer::before{content:"";position:absolute;left:25px;top:17px;width:21px;height:16px;border:2px solid #fff9;border-radius:3px 3px 8px 8px}
-.avatarCanvas .outerLayer::after{content:"";position:absolute;left:15px;top:-8px;width:8px;height:18px;border-left:7px solid var(--top,#4b9d55);border-right:7px solid var(--top,#4b9d55);border-radius:6px;box-sizing:content-box}
+.avatarCanvas .outerLayer::before{content:"";position:absolute;display:var(--pocket-display,block);left:var(--pocket-left,25px);top:var(--pocket-top,17px);width:var(--pocket-width,21px);height:var(--pocket-height,16px);border:var(--pocket-border,2px solid #fff9);border-radius:var(--pocket-radius,3px 3px 8px 8px);background:var(--pocket-background,transparent)}
+.avatarCanvas .outerLayer::after{content:"";position:absolute;display:var(--straps-display,block);left:var(--straps-left,15px);top:var(--straps-top,-8px);width:var(--straps-gap,8px);height:var(--straps-height,18px);border-left:var(--straps-width,7px) solid var(--outfit-detail,var(--top,#4b9d55));border-right:var(--straps-width,7px) solid var(--outfit-detail,var(--top,#4b9d55));border-radius:6px;box-sizing:content-box}
 .avatarCanvas .arm{position:absolute;top:111px;width:22px;height:85px;background:var(--skin,#e5b188);border-radius:14px;z-index:2}
 .avatarCanvas .arm.l{left:39px;transform:rotate(8deg)}.avatarCanvas .arm.r{right:39px;transform:rotate(-8deg)}
 .avatarCanvas .pants{position:absolute;left:61px;top:174px;width:74px;height:47px;background:var(--pants,#315b82);z-index:4;border-radius:7px}
@@ -187,9 +188,11 @@ input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px
   </div>
   <div class="tabs" id="dressTabs">
    <button class="tab on" onclick="dressCategory('hat',this)">帽子</button>
-   <button class="tab" onclick="dressCategory('top',this)">上着</button>
-   <button class="tab" onclick="dressCategory('pants',this)">ズボン</button>
-   <button class="tab" onclick="dressCategory('shoe',this)">靴</button>
+   <button class="tab" onclick="dressCategory('outfit',this)">服装セット</button>
+   <button class="tab" onclick="dressCategory('top',this)">服の色</button>
+   <button class="tab" onclick="dressCategory('pants',this)">ズボン色</button>
+   <button class="tab" onclick="dressCategory('shoeType',this)">靴タイプ</button>
+   <button class="tab" onclick="dressCategory('shoe',this)">靴の色</button>
    <button class="tab" onclick="dressCategory('accessory',this)">アクセサリー</button>
    <button class="tab" onclick="dressCategory('fun',this)">おもしろ</button>
    <button class="tab" onclick="dressCategory('saved',this)">保存コーデ</button>
@@ -272,11 +275,41 @@ const BADGES=[
 {id:'research1',cat:'自由研究',icon:'📚',name:'研究レポート完成',desc:'自由研究を完成する',points:50},
 {id:'invest1',cat:'設備',icon:'💡',name:'設備投資家',desc:'実物設備を購入・設置する',points:20}
 ];
-const HATS=['','🧢','👒','🎩','👑','🪖','🤠'];
+const HAT_ITEMS=[
+ {id:'none',value:'',name:'帽子なし',preview:'なし',style:{top:'-7px',fontSize:'76px'}},
+ {id:'cap',value:'🧢',name:'青いキャップ',preview:'🧢',style:{top:'-4px',fontSize:'72px'}},
+ {id:'straw',value:'👒',name:'麦わら帽子',preview:'👒',style:{top:'-12px',fontSize:'76px'}},
+ {id:'topHat',value:'🎩',name:'シルクハット',preview:'🎩',style:{top:'-7px',fontSize:'72px'}},
+ {id:'crown',value:'👑',name:'王冠',preview:'👑',style:{top:'-7px',fontSize:'76px'}},
+ {id:'helmet',value:'🪖',name:'ヘルメット',preview:'🪖',style:{top:'-7px',fontSize:'76px'}},
+ {id:'cowboy',value:'🤠',name:'カウボーイ帽',preview:'🤠',style:{top:'-7px',fontSize:'76px'}}
+];
+const HATS=HAT_ITEMS.map(x=>x.value);
 const TOPS=['#4b9d55','#3184c6','#d85d52','#e9b539','#8a60b4','#f2f2f2'];
 const PANTS=['#315b82','#454545','#755032','#6d4ca0','#29765b'];
 const SHOES=['#5b3a24','#202020','#ffffff','#d84c44','#345d94'];
-const ACCESSORIES=['','🌻','🦋','🎒','🧣','⭐'];
+const OUTFIT_SETS=[
+ {id:'farm',name:'農園服',preview:'🧑‍🌾',variables:{'--pocket-display':'block','--pocket-left':'24px','--pocket-top':'15px','--pocket-width':'20px','--pocket-height':'15px','--straps-display':'block','--straps-left':'14px','--straps-top':'-7px','--straps-height':'20px','--outfit-detail':'var(--top)'},layers:{outer:{borderRadius:'7px 7px 16px 16px'}}},
+ {id:'tshirt',name:'Tシャツ',preview:'👕',variables:{'--pocket-display':'none','--straps-display':'none'},layers:{inner:{display:'none'},outer:{display:'none'},torso:{borderRadius:'24px 24px 14px 14px'},arm:{height:'34px'}}},
+ {id:'hoodie',name:'パーカー',preview:'🧥',variables:{'--pocket-display':'block','--pocket-left':'17px','--pocket-top':'18px','--pocket-width':'34px','--pocket-height':'13px','--pocket-radius':'4px 4px 12px 12px','--pocket-background':'#fff1','--straps-display':'none'},layers:{inner:{left:'70px',top:'123px',width:'50px',height:'32px',background:'var(--top)',border:'3px solid #493a33',borderRadius:'50% 50% 15px 15px',clipPath:'none'},outer:{left:'59px',top:'139px',height:'39px',borderTop:'3px solid #493a33',borderRadius:'16px'},arm:{height:'47px'}}},
+ {id:'overalls',name:'オーバーオール',preview:'👖',variables:{'--pocket-display':'block','--pocket-left':'22px','--pocket-top':'15px','--pocket-width':'20px','--pocket-height':'16px','--straps-display':'block','--straps-left':'12px','--straps-top':'-10px','--straps-gap':'12px','--straps-height':'23px','--outfit-detail':'var(--pants)'},layers:{inner:{display:'none'},outer:{left:'62px',top:'140px',width:'66px',height:'39px',background:'var(--pants)',borderTop:'3px solid #493a33',borderRadius:'7px 7px 15px 15px'}}},
+ {id:'workVest',name:'作業ベスト',preview:'🦺',variables:{'--pocket-display':'block','--pocket-left':'8px','--pocket-top':'21px','--pocket-width':'48px','--pocket-height':'10px','--pocket-radius':'3px 3px 7px 7px','--straps-display':'none'},layers:{inner:{display:'none'},outer:{left:'61px',top:'133px',width:'68px',height:'45px',background:'linear-gradient(90deg,var(--top) 0 43%,#493a33 44% 47%,#fff5 48% 52%,#493a33 53% 56%,var(--top) 57%)',borderTop:'3px solid #493a33',borderRadius:'11px 11px 14px 14px',clipPath:'polygon(0 0,34% 0,44% 19%,56% 19%,66% 0,100% 0,100% 100%,0 100%)'},arm:{height:'30px'}}},
+ {id:'winter',name:'冬服',preview:'🧣',variables:{'--pocket-display':'block','--pocket-left':'7px','--pocket-top':'19px','--pocket-width':'50px','--pocket-height':'12px','--pocket-radius':'5px 5px 10px 10px','--pocket-background':'#fff1','--straps-display':'none'},layers:{torso:{left:'50px',width:'90px',height:'54px',borderRadius:'25px 25px 18px 18px'},inner:{left:'74px',top:'124px',width:'42px',height:'27px',background:'#f2f2f2',clipPath:'none',border:'3px solid #493a33',borderRadius:'14px'},outer:{left:'55px',top:'138px',width:'80px',height:'43px',borderTop:'3px solid #493a33',borderRadius:'13px 13px 17px 17px'},arm:{width:'30px',height:'49px'}}}
+];
+const SHOE_TYPES=[
+ {id:'boots',name:'長靴',preview:'🥾',layers:{top:'226px',width:'42px',height:'35px',borderRadius:'19px 19px 13px 15px'}},
+ {id:'sneakers',name:'スニーカー',preview:'👟',layers:{top:'239px',width:'43px',height:'21px',borderRadius:'16px 20px 8px 11px',transform:'rotate(-2deg)'}},
+ {id:'leather',name:'革靴',preview:'👞',layers:{top:'241px',width:'39px',height:'19px',borderRadius:'11px 17px 7px 8px'}}
+];
+const ACCESSORY_ITEMS=[
+ {id:'none',value:'',name:'アクセサリーなし',preview:'なし',slot:'front'},
+ {id:'sunflower',value:'🌻',name:'ひまわり',preview:'🌻',slot:'front'},
+ {id:'butterfly',value:'🦋',name:'ちょうちょ',preview:'🦋',slot:'front'},
+ {id:'backpack',value:'🎒',name:'リュック',preview:'🎒',slot:'back'},
+ {id:'scarf',value:'🧣',name:'マフラー',preview:'🧣',slot:'front'},
+ {id:'star',value:'⭐',name:'スター',preview:'⭐',slot:'front'}
+];
+const ACCESSORIES=ACCESSORY_ITEMS.map(x=>x.value);
 const FUN=['','🥕','🍅','🐼','🚀','🥷','🧙'];
 const CROP_ASSUMPTIONS={
  baby:{yieldG:150,cycleDays:25,variableCost:45}, salad:{yieldG:220,cycleDays:38,variableCost:60},
@@ -294,7 +327,7 @@ const EQUIPMENT_EFFECT={
 };
 function fresh(){return {
  version:'0.7.1',onboardDone:false,onboardStep:0,guideDone:false,guideStep:0,name:'',gender:'boy',avatarLayers:{gender:'boy',hair:'short1',face:'smile',hat:'none',top:'green',pants:'blue',shoes:'brown'},avatar:'🧑',
- outfitSaved:{hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:''},outfitDraft:{hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:''},savedCoords:[],
+ outfitSaved:{hat:'👒',outfit:'farm',top:'#4b9d55',pants:'#315b82',shoeType:'boots',shoe:'#5b3a24',accessory:'',fun:''},outfitDraft:{hat:'👒',outfit:'farm',top:'#4b9d55',pants:'#315b82',shoeType:'boots',shoe:'#5b3a24',accessory:'',fun:''},savedCoords:[],
  lv:1,xp:0,points:0,pointLog:[],sales:0,cost:0,loan:0,repayRate:30,
  equipment:Object.fromEntries(EQ.map(e=>[e.id,{owned:false,price:0,installed:false,date:null}])),
  planters:Array.from({length:4},(_,i)=>({id:i+1,crop:null,sowDate:null,observations:[],waterEvents:[],harvested:false,harvestPhotoData:'',harvestQty:0,harvestDate:'',sold:false})),
@@ -306,7 +339,7 @@ let S=JSON.parse(localStorage.getItem(KEY)||'null')||fresh();
 
 function normalizeState(){
  S.guideDone=!!S.guideDone;S.guideStep=S.guideStep||0;
- S.outfitSaved={hat:'👒',top:'#4b9d55',pants:'#315b82',shoe:'#5b3a24',accessory:'',fun:'',...(S.outfitSaved||{})};
+ S.outfitSaved={hat:'👒',outfit:'farm',top:'#4b9d55',pants:'#315b82',shoeType:'boots',shoe:'#5b3a24',accessory:'',fun:'',...(S.outfitSaved||{})};
  S.outfitDraft={...S.outfitSaved,...(S.outfitDraft||{})};
  S.savedCoords=S.savedCoords||[];S.investmentLog=S.investmentLog||[];S.debug=!!S.debug;S.utilityCost={electric:50,water:50,...(S.utilityCost||{})};S.notificationPermission=S.notificationPermission||'default';S.companyName=S.companyName||((S.name||'わたし')+'ファーム');S.companyLogo=S.companyLogo||'🌱';S.planters=(S.planters||[]).map(p=>({harvestPhotoData:'',harvestQty:0,harvestDate:'',sold:false,...p}));S.research={school:'',grade:'',clazz:'',name:S.name||'',title:'野菜を育てて売ってお小遣いを稼ぐ研究',purpose:'',initialReason:'',scienceLearning:'',innovation:'',moneyLearning:'',appFeeling:'',nextCrop:'',nextGoal:'',comment:'',completed:false,...(S.research||{})};
  S.equipment=S.equipment||{};
@@ -592,33 +625,40 @@ function renderAvatar(){
  const d=S.outfitDraft||{};
  const hat=HATS.includes(d.hat)?d.hat:'',top=TOPS.includes(d.top)?d.top:TOPS[0],pants=PANTS.includes(d.pants)?d.pants:PANTS[0],shoe=SHOES.includes(d.shoe)?d.shoe:SHOES[0];
  const accessory=ACCESSORIES.includes(d.accessory)?d.accessory:'',fun=FUN.includes(d.fun)?d.fun:'';
- const hasHat=!!hat,isBackAccessory=accessory==='🎒';
+ const outfit=OUTFIT_SETS.find(x=>x.id===d.outfit)||OUTFIT_SETS[0];
+ const shoeType=SHOE_TYPES.find(x=>x.id===d.shoeType)||SHOE_TYPES[0];
+ const hatItem=HAT_ITEMS.find(x=>x.value===hat)||HAT_ITEMS[0];
+ const accessoryItem=ACCESSORY_ITEMS.find(x=>x.value===accessory)||ACCESSORY_ITEMS[0];
+ const hasHat=!!hat,isBackAccessory=accessoryItem.slot==='back';
  const skin=S.gender==='girl'?'#e7b58d':'#dfaa80',hair=S.gender==='girl'?'#3f291f':'#49311f';
  const set=(selector,style)=>Object.assign(avatarCanvas.querySelector(selector).style,style);
+ const layer=(name,base)=>({...base,...(outfit.layers[name]||{})});
  Object.assign(avatarCanvas.style,{filter:'drop-shadow(0 8px 4px #24472c30)'});
  avatarCanvas.style.setProperty('--skin',skin);
  avatarCanvas.style.setProperty('--top',top);avatarCanvas.style.setProperty('--pants',pants);avatarCanvas.style.setProperty('--shoe',shoe);
+ const outfitVariables={'--pocket-display':'block','--pocket-left':'25px','--pocket-top':'17px','--pocket-width':'21px','--pocket-height':'16px','--pocket-border':'2px solid #fff9','--pocket-radius':'3px 3px 8px 8px','--pocket-background':'transparent','--straps-display':'block','--straps-left':'15px','--straps-top':'-8px','--straps-gap':'8px','--straps-height':'18px','--straps-width':'7px','--outfit-detail':'var(--top)',...outfit.variables};
+ Object.entries(outfitVariables).forEach(([name,value])=>avatarCanvas.style.setProperty(name,value));
  set('.backAccessoryLayer',{left:'24px',top:'120px',fontSize:'42px',zIndex:'1'});
- set('.hairBack',{left:'38px',top:'20px',width:'114px',height:S.gender==='girl'?'136px':'116px',background:`linear-gradient(135deg,transparent 0 46%,#fff1 47% 51%,transparent 52%),${hair}`,border:'3px solid #493a33',borderRadius:S.gender==='girl'?'60px 60px 34px 34px':'60px 60px 45px 45px',boxShadow:'inset -7px -7px 0 #0002',zIndex:'2'});
- set('.headPart',{left:'42px',top:'24px',width:'106px',height:'100px',background:skin,border:'3px solid #493a33',borderRadius:'52% 52% 48% 48% / 50% 50% 46% 46%',boxShadow:'inset -6px -5px 0 #0001',zIndex:'3'});
- set('.eye.l',{left:'64px',top:'75px',width:'12px',height:'15px',border:'2px solid #fff',boxShadow:'0 0 0 1px #2a211c,inset 0 -4px 0 #0002,-3px 24px 0 4px #e9898042',zIndex:'4'});
- set('.eye.r',{left:'114px',top:'75px',width:'12px',height:'15px',border:'2px solid #fff',boxShadow:'0 0 0 1px #2a211c,inset 0 -4px 0 #0002,3px 24px 0 4px #e9898042',zIndex:'4'});
- set('.smile',{left:'84px',top:'103px',width:'22px',height:'10px',background:'#b9655d',border:'2px solid #79443f',borderTop:'0',borderRadius:'4px 4px 15px 15px',boxShadow:'inset 0 -3px 0 #7f3e3a44',zIndex:'4'});
- set('.hairFront',{left:'39px',top:hasHat?'38px':'18px',width:'112px',height:hasHat?'34px':'55px',background:`linear-gradient(112deg,transparent 0 40%,#fff1 41% 44%,transparent 45%),${hair}`,border:'3px solid #493a33',borderRadius:hasHat?'26px 26px 19px 19px':'61px 61px 22px 27px',clipPath:hasHat?'polygon(0 0,100% 0,100% 76%,78% 72%,68% 100%,52% 76%,39% 96%,28% 72%,0 79%)':'polygon(0 0,100% 0,100% 73%,78% 70%,68% 100%,52% 75%,39% 96%,27% 71%,0 78%)',boxShadow:'inset -6px -5px 0 #0002',zIndex:'5'});
- set('.hatLayer',{top:hat==='👒'?'-12px':hat==='🧢'?'-4px':'-7px',fontSize:hat==='👒'?'76px':hat==='🧢'?'72px':hat==='🎩'?'72px':'76px',zIndex:'6'});
- set('.neck',{left:'86px',top:'121px',width:'18px',height:'11px',background:skin,border:'3px solid #493a33',borderRadius:'0 0 8px 8px',zIndex:'7'});
- set('.torso',{left:'54px',top:'130px',width:'82px',height:'52px',background:top,border:'3px solid #493a33',borderRadius:'23px 23px 16px 16px',boxShadow:'inset -6px -5px 0 #0001',zIndex:'7'});
- set('.innerLayer',{left:'82px',top:'131px',width:'26px',height:'20px',background:'#fff9',clipPath:'polygon(0 0,50% 58%,100% 0,82% 100%,18% 100%)',zIndex:'8'});
- set('.outerLayer',{left:'59px',top:'135px',width:'72px',height:'43px',background:`linear-gradient(180deg,#fff2 0 18%,transparent 19%),${top}`,border:'3px solid #493a33',borderTop:'0',borderRadius:'0 0 15px 15px',boxShadow:'inset -5px -5px 0 #0001',zIndex:'9'});
- set('.arm.l',{left:'33px',top:'136px',width:'26px',height:'43px',background:top,border:'3px solid #493a33',borderRadius:'17px 17px 13px 13px',boxShadow:'inset -4px -4px 0 #0001',transform:'rotate(6deg)',zIndex:'10'});
- set('.arm.r',{right:'33px',top:'136px',width:'26px',height:'43px',background:top,border:'3px solid #493a33',borderRadius:'17px 17px 13px 13px',boxShadow:'inset -4px -4px 0 #0001',transform:'rotate(-6deg)',zIndex:'10'});
- set('.hand.l',{left:'34px',top:'171px',width:'26px',height:'26px',background:skin,border:'3px solid #493a33',borderRadius:'52% 52% 48% 48%',boxShadow:'inset -3px -3px 0 #0001',zIndex:'11'});
- set('.hand.r',{right:'34px',top:'171px',width:'26px',height:'26px',background:skin,border:'3px solid #493a33',borderRadius:'52% 52% 48% 48%',boxShadow:'inset -3px -3px 0 #0001',zIndex:'11'});
- set('.pants',{left:'58px',top:'174px',width:'74px',height:'36px',background:pants,border:'3px solid #493a33',borderRadius:'11px 11px 15px 15px',boxShadow:'inset -5px -5px 0 #0001',zIndex:'12'});
- set('.leg.l',{left:'64px',top:'201px',width:'27px',height:'36px',background:pants,border:'3px solid #493a33',borderRadius:'0 0 13px 13px',zIndex:'13'});
- set('.leg.r',{left:'99px',top:'201px',width:'27px',height:'36px',background:pants,border:'3px solid #493a33',borderRadius:'0 0 13px 13px',zIndex:'13'});
- set('.shoe.l',{left:'52px',top:'228px',width:'41px',height:'33px',background:`linear-gradient(180deg,#fff2 0 24%,transparent 25%),${shoe}`,border:'3px solid #493a33',borderRadius:'18px 18px 12px 14px',boxShadow:'inset -4px -4px 0 #0002',zIndex:'14'});
- set('.shoe.r',{left:'97px',top:'228px',width:'41px',height:'33px',background:`linear-gradient(180deg,#fff2 0 24%,transparent 25%),${shoe}`,border:'3px solid #493a33',borderRadius:'18px 18px 14px 12px',boxShadow:'inset -4px -4px 0 #0002',zIndex:'14'});
+ set('.hairBack',{left:'36px',top:'18px',width:'118px',height:S.gender==='girl'?'138px':'114px',background:`radial-gradient(circle at 31% 22%,#fff2 0 5%,transparent 6%),linear-gradient(135deg,transparent 0 47%,#fff1 48% 51%,transparent 52%),${hair}`,border:'3px solid #493a33',borderRadius:S.gender==='girl'?'62px 62px 38px 38px':'62px 62px 48px 48px',boxShadow:'inset -7px -7px 0 #0002',zIndex:'2'});
+ set('.headPart',{left:'40px',top:'22px',width:'110px',height:'104px',background:`radial-gradient(ellipse at 20% 76%,#e989803d 0 8%,transparent 9%),radial-gradient(ellipse at 80% 76%,#e989803d 0 8%,transparent 9%),${skin}`,border:'3px solid #493a33',borderRadius:'54% 54% 50% 50% / 52% 52% 48% 48%',boxShadow:'inset -6px -5px 0 #0001',zIndex:'3'});
+ set('.eye.l',{left:'62px',top:'73px',width:'13px',height:'16px',border:'2px solid #fff',boxShadow:'0 0 0 1px #2a211c,inset 0 -4px 0 #0002',zIndex:'4'});
+ set('.eye.r',{left:'115px',top:'73px',width:'13px',height:'16px',border:'2px solid #fff',boxShadow:'0 0 0 1px #2a211c,inset 0 -4px 0 #0002',zIndex:'4'});
+ set('.smile',{left:'84px',top:'103px',width:'22px',height:'9px',background:'transparent',border:'0',borderBottom:'3px solid #9a5049',borderRadius:'0 0 18px 18px',boxShadow:'none',zIndex:'4'});
+ set('.hairFront',{left:'37px',top:hasHat?'36px':'16px',width:'116px',height:hasHat?'38px':'59px',background:`radial-gradient(circle at 31% 20%,#fff2 0 4%,transparent 5%),linear-gradient(112deg,transparent 0 42%,#fff1 43% 46%,transparent 47%),${hair}`,border:'3px solid #493a33',borderRadius:hasHat?'30px 30px 22px 22px':'63px 63px 25px 29px',clipPath:hasHat?'polygon(0 0,100% 0,100% 72%,90% 84%,80% 68%,69% 100%,57% 73%,45% 98%,33% 72%,20% 92%,8% 75%,0 80%)':'polygon(0 0,100% 0,100% 70%,90% 83%,80% 67%,69% 100%,57% 72%,45% 97%,33% 71%,20% 91%,8% 74%,0 79%)',boxShadow:'inset -6px -5px 0 #0002',zIndex:'5'});
+ set('.hatLayer',{...hatItem.style,zIndex:'6'});
+ set('.neck',{left:'86px',top:'122px',width:'18px',height:'8px',background:skin,border:'3px solid #493a33',borderRadius:'0 0 9px 9px',zIndex:'7'});
+ set('.torso',layer('torso',{display:'block',left:'54px',top:'128px',width:'82px',height:'50px',background:top,border:'3px solid #493a33',borderRadius:'25px 25px 17px 17px',boxShadow:'inset -6px -5px 0 #0001',zIndex:'7'}));
+ set('.innerLayer',layer('inner',{display:'block',left:'82px',top:'131px',width:'26px',height:'20px',background:'#fff9',border:'0',borderRadius:'0',clipPath:'polygon(0 0,50% 58%,100% 0,82% 100%,18% 100%)',zIndex:'8'}));
+ set('.outerLayer',layer('outer',{display:'block',left:'59px',top:'135px',width:'72px',height:'43px',background:`linear-gradient(180deg,#fff2 0 18%,transparent 19%),${top}`,border:'3px solid #493a33',borderTop:'0',borderRadius:'0 0 15px 15px',clipPath:'none',boxShadow:'inset -5px -5px 0 #0001',zIndex:'9'}));
+ set('.arm.l',layer('arm',{display:'block',left:'32px',right:'auto',top:'134px',width:'27px',height:'43px',background:top,border:'3px solid #493a33',borderRadius:'19px 19px 15px 15px',boxShadow:'inset -4px -4px 0 #0001',transform:'rotate(6deg)',zIndex:'10'}));
+ set('.arm.r',layer('arm',{display:'block',left:'auto',right:'32px',top:'134px',width:'27px',height:'43px',background:top,border:'3px solid #493a33',borderRadius:'19px 19px 15px 15px',boxShadow:'inset -4px -4px 0 #0001',transform:'rotate(-6deg)',zIndex:'10'}));
+ set('.hand.l',{left:'33px',top:'169px',width:'27px',height:'27px',background:skin,border:'3px solid #493a33',borderRadius:'56% 56% 48% 48%',boxShadow:'inset -3px -3px 0 #0001',zIndex:'11'});
+ set('.hand.r',{right:'33px',top:'169px',width:'27px',height:'27px',background:skin,border:'3px solid #493a33',borderRadius:'56% 56% 48% 48%',boxShadow:'inset -3px -3px 0 #0001',zIndex:'11'});
+ set('.pants',{left:'58px',top:'171px',width:'74px',height:'37px',background:pants,border:'3px solid #493a33',borderRadius:'13px 13px 16px 16px',boxShadow:'inset -5px -5px 0 #0001',zIndex:'12'});
+ set('.leg.l',{left:'64px',top:'199px',width:'27px',height:'36px',background:pants,border:'3px solid #493a33',borderRadius:'5px 5px 14px 14px',zIndex:'13'});
+ set('.leg.r',{left:'99px',top:'199px',width:'27px',height:'36px',background:pants,border:'3px solid #493a33',borderRadius:'5px 5px 14px 14px',zIndex:'13'});
+ set('.shoe.l',{display:'block',left:'52px',...shoeType.layers,background:`linear-gradient(180deg,#fff2 0 24%,transparent 25%),${shoe}`,border:'3px solid #493a33',boxShadow:'inset -4px -4px 0 #0002',zIndex:'14'});
+ set('.shoe.r',{display:'block',left:'97px',...shoeType.layers,background:`linear-gradient(180deg,#fff2 0 24%,transparent 25%),${shoe}`,border:'3px solid #493a33',boxShadow:'inset -4px -4px 0 #0002',zIndex:'14'});
  set('.accessoryLayer',{right:'13px',top:accessory==='🧣'?'128px':'119px',fontSize:'40px',zIndex:'15'});set('.funLayer',{top:'111px',fontSize:'96px',zIndex:'16'});
  avatarBackAccessory.textContent=isBackAccessory?accessory:'';
  avatarHat.textContent=hat;avatarAccessory.textContent=isBackAccessory?'':accessory;avatarFun.textContent=fun;
@@ -628,20 +668,31 @@ function renderAvatar(){
 function dressCategory(cat,btn){window.currentDressCategory=cat;document.querySelectorAll('#dressTabs .tab').forEach(x=>x.classList.remove('on'));btn?.classList.add('on');renderDress(cat)}
 function renderDress(cat){
  if(!dressItems)return;
- let arr=cat==='hat'?HATS:cat==='top'?TOPS:cat==='pants'?PANTS:cat==='shoe'?SHOES:cat==='accessory'?ACCESSORIES:cat==='fun'?FUN:S.savedCoords;
- let key=cat==='saved'?null:cat;
- dressItems.innerHTML=arr.map((x,i)=>{
+ const catalogs={
+  hat:HAT_ITEMS,
+  outfit:OUTFIT_SETS.map(x=>({value:x.id,name:x.name,preview:x.preview})),
+  top:TOPS.map(x=>({value:x,name:'服の色',swatch:x})),
+  pants:PANTS.map(x=>({value:x,name:'ズボン色',swatch:x})),
+  shoeType:SHOE_TYPES.map(x=>({value:x.id,name:x.name,preview:x.preview})),
+  shoe:SHOES.map(x=>({value:x,name:'靴の色',swatch:x})),
+  accessory:ACCESSORY_ITEMS,
+  fun:FUN.map(x=>({value:x,name:x||'おもしろ衣装なし',preview:x||'なし'}))
+ };
+ const arr=cat==='saved'?S.savedCoords:(catalogs[cat]||[]);
+ const key=cat==='saved'?null:cat;
+ dressItems.innerHTML=arr.map((item,i)=>{
+   const value=cat==='saved'?null:item.value;
    let locked=!S.debug&&cat!=='saved'&&i>S.lv;
-   let on=key&&S.outfitDraft[key]===x;
-   let label=x||'なし';
-   let visual=(cat==='top'||cat==='pants'||cat==='shoe')?`<span style="display:block;width:38px;height:38px;border-radius:10px;background:${x};margin:auto"></span>`:(cat==='saved'?(x.hat+x.accessory+x.fun||'コーデ'):label);
-   return `<button class="item ${on?'on':''} ${locked?'locked':''}" onclick="${locked?'alert(\'まだ解放されていません\')':cat==='saved'?`applyCoord(${i})`:`tryItem('${cat}','${x}')`}">${visual}<div class="small">${locked?'Lv.'+(i+1):'試着'}</div></button>`
+   let on=key&&S.outfitDraft[key]===value;
+   const savedVisual=cat==='saved'?[HATS.includes(item.hat)?item.hat:'',ACCESSORIES.includes(item.accessory)?item.accessory:'',FUN.includes(item.fun)?item.fun:''].join('')||'コーデ':null;
+   const visual=cat==='saved'?savedVisual:item.swatch?`<span style="display:block;width:38px;height:38px;border-radius:10px;background:${item.swatch};margin:auto"></span>`:`<span>${item.preview}</span><div class="small">${item.name}</div>`;
+   return `<button class="item ${on?'on':''} ${locked?'locked':''}" onclick="${locked?'alert(\'まだ解放されていません\')':cat==='saved'?`applyCoord(${i})`:`tryItem('${cat}','${value}')`}">${visual}<div class="small">${locked?'Lv.'+(i+1):'試着'}</div></button>`
  }).join('')
 }
 function tryItem(cat,item){S.outfitDraft[cat]=item;renderAvatar();renderDress(cat)}
 function revertOutfit(){S.outfitDraft={...S.outfitSaved};renderAvatar();renderDress(window.currentDressCategory||'hat')}
 function commitOutfit(){S.outfitSaved={...S.outfitDraft};S.savedCoords.push({...S.outfitSaved});save();renderAvatar();alert('コーデを保存しました')}
-function applyCoord(i){S.outfitDraft={...S.savedCoords[i]};renderAvatar();renderDress('saved')}
+function applyCoord(i){S.outfitDraft={outfit:'farm',shoeType:'boots',...S.savedCoords[i]};renderAvatar();renderDress('saved')}
 function exportData(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='農園長者バックアップ.json';a.click()}
 function resetData(){if(confirm('全データを初期化しますか？')){localStorage.removeItem(KEY);location.reload()}}
 function onboarding(){if(S.onboardDone)return;onboard.classList.add('show');renderOnboarding()}
