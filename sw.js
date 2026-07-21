@@ -1,5 +1,5 @@
-const CACHE='nouen-choja-v071-20260721-photo2';
-const CORE=['./','./index.html','./icon-192.png','./icon-512.png','./manifest.json','./assets/crops/radish.jpg','./assets/crops/baby-leaf.png','./assets/crops/salad-lettuce.jpg','./assets/crops/komatsuna.jpg','./assets/crops/spinach.jpg','./assets/crops/lettuce.jpg','./assets/crops/basil.jpg','./assets/crops/tomato.jpg','./assets/crops/cucumber.jpg','./assets/crops/edamame.jpg','./assets/crops/broccoli.jpg','./assets/crops/snow-pea.jpg','./assets/crops/strawberry.jpg'];
+const CACHE='nouen-choja-v071-20260721-photo3';
+const CORE=['./','./index.html','./icon-192.png','./icon-512.png','./manifest.json','./assets/crops/radish.jpg','./assets/crops/baby-leaf.jpg','./assets/crops/salad-lettuce.jpg','./assets/crops/komatsuna.jpg','./assets/crops/spinach.jpg','./assets/crops/lettuce.jpg','./assets/crops/basil.jpg','./assets/crops/tomato.jpg','./assets/crops/cucumber.jpg','./assets/crops/edamame.jpg','./assets/crops/broccoli.jpg','./assets/crops/snow-pea.jpg','./assets/crops/strawberry.jpg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
